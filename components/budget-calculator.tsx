@@ -92,7 +92,7 @@ export function BudgetCalculatorForm({ grossIncome, onSubmit }: { grossIncome: n
         <Card className="col-span-3">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-6">
                 <CardTitle className="text-xl font-medium">
-                    Salary Calculator
+                    Budget Calculator
                 </CardTitle>
                 <Calculator
                     className="h-4 w-4 text-muted-foreground"
