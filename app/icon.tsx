@@ -28,6 +28,7 @@ export default function Icon() {
   const lightStyle = {
     width: '100%',
     height: '100%',
+    background: '#1B1B1B',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
