@@ -24,6 +24,7 @@ import {
   TableRow
 } from "@/components/ui/table"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { Bird, BirdIcon } from "lucide-react"
 
 export const metadata: Metadata = {
   title: "Rakan",
@@ -122,7 +123,12 @@ export default function HomePage() {
       <div className="flex flex-col">
         <div className="flex-1 space-y-4 p-8 pt-6">
           <div className="flex items-center justify-between space-y-2">
-            <h2 className="tracking-tight transition font-display text-6xl font-bold md:text-[3rem] bg-gradient-to-r from-20% bg-clip-text text-transparent from-emerald-400 to-yellow-300">Rakan</h2>
+            <div className="flex">
+            <h2 className="tracking-tight transition font-display text-6xl font-bold md:text-[3rem] bg-gradient-to-r from-20% bg-clip-text text-transparent from-emerald-400 to-yellow-300">
+              Rakan
+            </h2>
+            <BirdIcon className="text-yellow-300 text-6xl text-[3rem]"/>
+            </div>
             <div className="flex items-center space-x-2">
               <ThemeToggle/>
             </div>
