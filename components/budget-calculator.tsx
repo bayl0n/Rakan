@@ -19,8 +19,7 @@ const formSchema = z.object({
 export function BudgetDashboard({...props}) {
     const [grossIncome, useGrossIncome] = useState(50000);
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log(values);
+    function OnSubmit(values: z.infer<typeof formSchema>) {
         useGrossIncome(values.grossIncome);
     }
 
@@ -74,7 +73,7 @@ export function BudgetDashboard({...props}) {
                     </div>
                 </CardContent>
             </Card>
-            <BudgetCalculatorForm grossIncome={grossIncome} onSubmit={onSubmit} />
+            <BudgetCalculatorForm grossIncome={grossIncome} onSubmit={OnSubmit} />
         </>
     )
 }
