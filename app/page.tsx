@@ -128,7 +128,7 @@ export default function HomePage() {
             <TabsTrigger value="personal">
               Personal
             </TabsTrigger>
-            <TabsTrigger value="apartment">
+            <TabsTrigger value="apartment" disabled>
               Apartment
             </TabsTrigger>
           </TabsList>

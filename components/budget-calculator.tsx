@@ -1,6 +1,6 @@
 "use client"
 
-import { Calculator, Check, ChevronsUpDown, Command, Link } from "lucide-react";
+import { BanknoteIcon, CalculatorIcon, DollarSignIcon, EggFriedIcon, GemIcon, PiggyBankIcon } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "./ui/card";
 import { Input } from "./ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -14,6 +14,13 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem, SelectLa
 const Pers = ["year", "month", "week", "day", "hour"] as const;
 type Per = typeof Pers[number];
 
+interface Props {
+    grossIncome: number,
+    useGrossIncome: Dispatch<SetStateAction<number>>,
+    per: Per,
+    usePer: Dispatch<SetStateAction<Per>>
+}
+
 const formSchema = z.object({
     grossIncome: z.coerce.number().min(0, {
         message: "Gross income must be greater than 0.",
@@ -25,7 +32,7 @@ export function BudgetDashboard({ ...props }) {
     const [grossIncome, useGrossIncome] = useState<number>(50000);
     const [per, usePer] = useState<Per>(Pers[0]);
 
-    const childProps = {
+    const childProps: Props = {
         grossIncome,
         useGrossIncome,
         per,
@@ -39,10 +46,13 @@ export function BudgetDashboard({ ...props }) {
                     <CardTitle className="text-sm font-medium">
                         Gross Income
                     </CardTitle>
+                    <DollarSignIcon
+                        className="h-4 w-4 text-muted-foreground"
+                    />
                 </CardHeader>
                 <CardContent>
                     <div className="text-2xl font-bold">
-                        ${grossIncome.toLocaleString(undefined, { minimumFractionDigits: 2 })} / {per}
+                        ${grossIncome.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} / {per}
                     </div>
                 </CardContent>
             </Card>
@@ -51,10 +61,13 @@ export function BudgetDashboard({ ...props }) {
                     <CardTitle className="text-sm font-medium">
                         Expenses
                     </CardTitle>
+                    <BanknoteIcon
+                        className="h-4 w-4 text-muted-foreground"
+                    />
                 </CardHeader>
                 <CardContent>
                     <div className="text-2xl font-bold">
-                        ${(grossIncome * 0.5).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                        ${(grossIncome * 0.5).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </div>
                 </CardContent>
             </Card>
@@ -63,10 +76,13 @@ export function BudgetDashboard({ ...props }) {
                     <CardTitle className="text-sm font-medium">
                         Luxury
                     </CardTitle>
+                    <GemIcon
+                        className="h-4 w-4 text-muted-foreground"
+                    />
                 </CardHeader>
                 <CardContent>
                     <div className="text-2xl font-bold">
-                        ${(grossIncome * 0.3).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                        ${(grossIncome * 0.3).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </div>
                 </CardContent>
             </Card>
@@ -75,10 +91,13 @@ export function BudgetDashboard({ ...props }) {
                     <CardTitle className="text-sm font-medium">
                         Savings
                     </CardTitle>
+                    <PiggyBankIcon
+                        className="h-4 w-4 text-muted-foreground"
+                    />
                 </CardHeader>
                 <CardContent>
                     <div className="text-2xl font-bold">
-                        ${(grossIncome * 0.2).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                        ${(grossIncome * 0.2).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </div>
                 </CardContent>
             </Card>
@@ -87,7 +106,7 @@ export function BudgetDashboard({ ...props }) {
     )
 }
 
-export function BudgetCalculatorForm({ grossIncome, useGrossIncome, per, usePer }: { grossIncome: number, useGrossIncome: Dispatch<SetStateAction<number>>, per: Per, usePer: Dispatch<SetStateAction<Per>>}) {
+export function BudgetCalculatorForm({ grossIncome, useGrossIncome, per, usePer }: Props) {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -108,7 +127,7 @@ export function BudgetCalculatorForm({ grossIncome, useGrossIncome, per, usePer 
                 <CardTitle className="text-xl font-medium">
                     Budget Calculator
                 </CardTitle>
-                <Calculator
+                <CalculatorIcon
                     className="h-4 w-4 text-muted-foreground"
                 />
             </CardHeader>
@@ -164,6 +183,23 @@ export function BudgetCalculatorForm({ grossIncome, useGrossIncome, per, usePer 
                         <Button type="submit">Submit</Button>
                     </form>
                 </Form>
+            </CardContent>
+        </Card>
+    )
+}
+
+export function BudgetBreakdownCard({ grossIncome, useGrossIncome, per, usePer }: Props) {
+    return (
+        <Card className="col-span-2">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-6">
+                <CardTitle className="text-2xl font-medium">
+                    Breakdown
+                </CardTitle>
+                <EggFriedIcon
+                    className="h-4 w-4 text-muted-foreground"
+                />
+            </CardHeader>
+            <CardContent>
             </CardContent>
         </Card>
     )
