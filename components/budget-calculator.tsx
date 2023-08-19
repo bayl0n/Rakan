@@ -87,11 +87,12 @@ export function BudgetDashboard({ ...props }) {
     )
 }
 
-export function BudgetCalculatorForm({ grossIncome, useGrossIncome, per, usePer }: { grossIncome: number, useGrossIncome: any, per: string, usePer: any }) {
+export function BudgetCalculatorForm({ grossIncome, useGrossIncome, per, usePer }: { grossIncome: number, useGrossIncome: any, per: Per, usePer: any }) {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             grossIncome: grossIncome,
+            per: per,
         },
     });
 
