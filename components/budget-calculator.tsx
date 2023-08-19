@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
 import { Button } from "./ui/button";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem, SelectLabel, SelectGroup } from "./ui/select";
 
 const Pers = ["year", "month", "week", "day", "hour"] as const;
@@ -22,8 +22,8 @@ const formSchema = z.object({
 });
 
 export function BudgetDashboard({ ...props }) {
-    const [grossIncome, useGrossIncome] = useState(50000);
-    const [per, usePer] = useState(Pers[0]);
+    const [grossIncome, useGrossIncome] = useState<number>(50000);
+    const [per, usePer] = useState<Per>(Pers[0]);
 
     const childProps = {
         grossIncome,
@@ -87,7 +87,7 @@ export function BudgetDashboard({ ...props }) {
     )
 }
 
-export function BudgetCalculatorForm({ grossIncome, useGrossIncome, per, usePer }: { grossIncome: number, useGrossIncome: any, per: Per, usePer: any }) {
+export function BudgetCalculatorForm({ grossIncome, useGrossIncome, per, usePer }: { grossIncome: number, useGrossIncome: Dispatch<SetStateAction<number>>, per: Per, usePer: Dispatch<SetStateAction<Per>>}) {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
