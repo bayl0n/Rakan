@@ -1,6 +1,6 @@
 "use client"
 
-import { Calculator } from "lucide-react";
+import { Calculator, Check, ChevronsUpDown, Command, Link } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "./ui/card";
 import { Input } from "./ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -9,19 +9,28 @@ import * as z from "zod";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
 import { Button } from "./ui/button";
 import { useState } from "react";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem, SelectLabel, SelectGroup } from "./ui/select";
+
+const Pers = ["year", "month", "week", "day", "hour"] as const;
+type Per = typeof Pers[number];
 
 const formSchema = z.object({
     grossIncome: z.coerce.number().min(0, {
         message: "Gross income must be greater than 0.",
     }),
+    per: z.enum(Pers),
 });
 
-export function BudgetDashboard({...props}) {
+export function BudgetDashboard({ ...props }) {
     const [grossIncome, useGrossIncome] = useState(50000);
+    const [per, usePer] = useState(Pers[0]);
 
-    function OnSubmit(values: z.infer<typeof formSchema>) {
-        useGrossIncome(values.grossIncome);
-    }
+    const childProps = {
+        grossIncome,
+        useGrossIncome,
+        per,
+        usePer,
+    };
 
     return (
         <>
@@ -33,7 +42,7 @@ export function BudgetDashboard({...props}) {
                 </CardHeader>
                 <CardContent>
                     <div className="text-2xl font-bold">
-                        ${grossIncome.toLocaleString(undefined, {minimumFractionDigits: 2})}
+                        ${grossIncome.toLocaleString(undefined, { minimumFractionDigits: 2 })} / {per}
                     </div>
                 </CardContent>
             </Card>
@@ -45,7 +54,7 @@ export function BudgetDashboard({...props}) {
                 </CardHeader>
                 <CardContent>
                     <div className="text-2xl font-bold">
-                        ${(grossIncome * 0.5).toLocaleString(undefined, {minimumFractionDigits: 2})}
+                        ${(grossIncome * 0.5).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                     </div>
                 </CardContent>
             </Card>
@@ -57,7 +66,7 @@ export function BudgetDashboard({...props}) {
                 </CardHeader>
                 <CardContent>
                     <div className="text-2xl font-bold">
-                        ${(grossIncome * 0.3).toLocaleString(undefined, {minimumFractionDigits: 2})}
+                        ${(grossIncome * 0.3).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                     </div>
                 </CardContent>
             </Card>
@@ -69,17 +78,16 @@ export function BudgetDashboard({...props}) {
                 </CardHeader>
                 <CardContent>
                     <div className="text-2xl font-bold">
-                        ${(grossIncome * 0.2).toLocaleString(undefined, {minimumFractionDigits: 2})}
+                        ${(grossIncome * 0.2).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                     </div>
                 </CardContent>
             </Card>
-            <BudgetCalculatorForm grossIncome={grossIncome} onSubmit={OnSubmit} />
+            <BudgetCalculatorForm {...childProps} />
         </>
     )
 }
 
-export function BudgetCalculatorForm({ grossIncome, onSubmit }: { grossIncome: number, onSubmit: any }) {
-
+export function BudgetCalculatorForm({ grossIncome, useGrossIncome, per, usePer }: { grossIncome: number, useGrossIncome: any, per: string, usePer: any }) {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -87,8 +95,14 @@ export function BudgetCalculatorForm({ grossIncome, onSubmit }: { grossIncome: n
         },
     });
 
+    function useSubmit(values: z.infer<typeof formSchema>) {
+        console.log(values);
+        useGrossIncome(values.grossIncome);
+        usePer(values.per);
+    }
+
     return (
-        <Card className="col-span-3">
+        <Card className="col-span-2">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-6">
                 <CardTitle className="text-xl font-medium">
                     Budget Calculator
@@ -99,7 +113,7 @@ export function BudgetCalculatorForm({ grossIncome, onSubmit }: { grossIncome: n
             </CardHeader>
             <CardContent>
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                    <form onSubmit={form.handleSubmit(useSubmit)} className="space-y-8">
                         <FormField
                             control={form.control}
                             name="grossIncome"
@@ -114,6 +128,36 @@ export function BudgetCalculatorForm({ grossIncome, onSubmit }: { grossIncome: n
                                     </FormDescription>
                                     <FormMessage />
                                 </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="per"
+                            render={({ field }) => (
+                                <FormItem>
+                                <FormLabel>Per</FormLabel>
+                                <Select onValueChange={field.onChange} defaultValue={per}>
+                                  <FormControl>
+                                    <SelectTrigger>
+                                      <SelectValue placeholder="Select an option..." />
+                                    </SelectTrigger>
+                                  </FormControl>
+                                  <SelectContent>
+                                    <SelectGroup>
+                                        <SelectLabel>Per</SelectLabel>
+                                        { Pers.map(per => {
+                                            return(
+                                                <SelectItem key={per} value={per}>{per}</SelectItem>
+                                            )
+                                        })}
+                                    </SelectGroup>
+                                  </SelectContent>
+                                </Select>
+                                <FormDescription>
+                                    How often you are paid.
+                                </FormDescription>
+                                <FormMessage />
+                              </FormItem>
                             )}
                         />
                         <Button type="submit">Submit</Button>
