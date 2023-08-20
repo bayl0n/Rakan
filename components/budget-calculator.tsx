@@ -30,7 +30,7 @@ function convertPer(income: number, fromPer: Per, toPer: Per): number {
     const fromPerHours = hourConversion.get(fromPer);
     const toPerHours = hourConversion.get(toPer);
 
-    if (!fromPerHours || !toPerHours) throw new Error('Invalid number');
+    if (!fromPerHours || !toPerHours) throw new Error('Invalid per');
 
     const incomeHours = income / fromPerHours;
 
@@ -240,7 +240,7 @@ export function BudgetBreakdownCard({ grossIncome, useGrossIncome, per, usePer }
                                     currPer = perTrigger;
 
                                 return (
-                                    <TabsTrigger className="text-xs" key={perTrigger} value={perTrigger}>
+                                    <TabsTrigger key={perTrigger} value={perTrigger}>
                                         {currPer[0].toUpperCase() + currPer.slice(1)}ly
                                     </TabsTrigger>
                                 )
