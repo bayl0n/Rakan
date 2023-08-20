@@ -17,20 +17,24 @@ import { reduceEachTrailingCommentRange } from "typescript";
 const Pers = ["year", "month", "week", "day", "hour"] as const;
 type Per = typeof Pers[number];
 
-function convertPer(income: number, fromPer: Per, toPer: Per) {
-    if (fromPer === toPer) return income;
+function convertPer(income: number, fromPer: Per, toPer: Per): number {
+    // Convert to hour then convert to destination
+    const hourConversion= new Map<Per, number>();
 
-    // start with year
-    const conversionMap = new Map<Per, any>();
+    hourConversion.set("year", 2080);
+    hourConversion.set("month", 160);
+    hourConversion.set("week", 40);
+    hourConversion.set("day", 8);
+    hourConversion.set("hour", 1);
 
-    conversionMap.set("hour", {
-        "year": 8760,
-        "month": 730,
-        "week": 168,
-        "day": 24,
-    });
+    const fromPerHours = hourConversion.get(fromPer);
+    const toPerHours = hourConversion.get(toPer);
 
-    return income;
+    if (!fromPerHours || !toPerHours) throw new Error('Invalid number');
+
+    const incomeHours = income / fromPerHours;
+
+    return incomeHours * toPerHours;
 }
 
 interface Props {
@@ -225,9 +229,8 @@ export function BudgetBreakdownCard({ grossIncome, useGrossIncome, per, usePer }
                 />
             </CardHeader>
             <CardContent>
-                {/* Desktop View */}
-                <Tabs className="sm:block" defaultValue={per}>
-                    <ScrollArea>
+                <Tabs defaultValue={per}>
+                    <ScrollArea className="pb-4">
                         <TabsList>
                             {Pers.map(perTrigger => {
                                 let currPer;
@@ -248,7 +251,9 @@ export function BudgetBreakdownCard({ grossIncome, useGrossIncome, per, usePer }
                     {Pers.map(perContent => {
                         return (
                             <TabsContent key={perContent} value={perContent}>
-                                Converting {per} to {perContent}
+                                <div className="text-2xl font-bold">
+                                    ${(convertPer(grossIncome, per, perContent)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                </div>
                             </TabsContent>
                         )
                     })}
