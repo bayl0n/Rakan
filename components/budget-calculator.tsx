@@ -11,9 +11,26 @@ import { Button } from "./ui/button";
 import { Dispatch, SetStateAction, useState } from "react";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem, SelectLabel, SelectGroup } from "./ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import { ScrollArea } from "./ui/scroll-area";
+import { reduceEachTrailingCommentRange } from "typescript";
 
 const Pers = ["year", "month", "week", "day", "hour"] as const;
 type Per = typeof Pers[number];
+
+function convertPer(income: number, fromPer: Per, toPer: Per) {
+    const multiplier = 0;
+
+    // start with year
+    const conversionMap = new Map<Per, any>();
+
+    conversionMap.set("year", {
+        "month": 1 / 12,
+        "week": 1 / 52,
+        "day": 1 / 365,
+    });
+
+    return income * multiplier;
+}
 
 interface Props {
     grossIncome: number,
@@ -207,7 +224,8 @@ export function BudgetBreakdownCard({ grossIncome, useGrossIncome, per, usePer }
                 />
             </CardHeader>
             <CardContent>
-                <Tabs defaultValue={per} className="w-[400px]">
+                {/* Desktop View */}
+                <Tabs className="hidden sm:block" defaultValue={per}>
                     <TabsList>
                         {Pers.map(perTrigger => {
                             let currPer;
@@ -217,7 +235,7 @@ export function BudgetBreakdownCard({ grossIncome, useGrossIncome, per, usePer }
                                 currPer = perTrigger;
 
                             return (
-                                <TabsTrigger key={perTrigger} value={perTrigger}>
+                                <TabsTrigger className="text-xs" key={perTrigger} value={perTrigger}>
                                     {currPer[0].toUpperCase() + currPer.slice(1)}ly
                                 </TabsTrigger>
                             )
@@ -231,6 +249,22 @@ export function BudgetBreakdownCard({ grossIncome, useGrossIncome, per, usePer }
                         )
                     })}
                 </Tabs>
+                <div className="block sm:hidden">
+                    <Select defaultValue={per}>
+                        <SelectTrigger className="w-[180px]">
+                            <SelectValue placeholder="Select a filter" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectGroup>
+                                {Pers.map(selectPer => {
+                                    return (
+                                        <SelectItem key={selectPer} value={selectPer}>{selectPer[0].toUpperCase() + selectPer.slice(1)}ly</SelectItem>
+                                    )
+                                })}
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+                </div>
             </CardContent>
         </Card>
     )
