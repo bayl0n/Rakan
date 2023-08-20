@@ -11,25 +11,26 @@ import { Button } from "./ui/button";
 import { Dispatch, SetStateAction, useState } from "react";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem, SelectLabel, SelectGroup } from "./ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
-import { ScrollArea } from "./ui/scroll-area";
+import { ScrollArea, ScrollBar } from "./ui/scroll-area";
 import { reduceEachTrailingCommentRange } from "typescript";
 
 const Pers = ["year", "month", "week", "day", "hour"] as const;
 type Per = typeof Pers[number];
 
 function convertPer(income: number, fromPer: Per, toPer: Per) {
-    const multiplier = 0;
+    if (fromPer === toPer) return income;
 
     // start with year
     const conversionMap = new Map<Per, any>();
 
-    conversionMap.set("year", {
-        "month": 1 / 12,
-        "week": 1 / 52,
-        "day": 1 / 365,
+    conversionMap.set("hour", {
+        "year": 8760,
+        "month": 730,
+        "week": 168,
+        "day": 24,
     });
 
-    return income * multiplier;
+    return income;
 }
 
 interface Props {
@@ -225,22 +226,25 @@ export function BudgetBreakdownCard({ grossIncome, useGrossIncome, per, usePer }
             </CardHeader>
             <CardContent>
                 {/* Desktop View */}
-                <Tabs className="hidden sm:block" defaultValue={per}>
-                    <TabsList>
-                        {Pers.map(perTrigger => {
-                            let currPer;
-                            if (perTrigger === 'day')
-                                currPer = 'dai';
-                            else
-                                currPer = perTrigger;
+                <Tabs className="sm:block" defaultValue={per}>
+                    <ScrollArea>
+                        <TabsList>
+                            {Pers.map(perTrigger => {
+                                let currPer;
+                                if (perTrigger === 'day')
+                                    currPer = 'dai';
+                                else
+                                    currPer = perTrigger;
 
-                            return (
-                                <TabsTrigger className="text-xs" key={perTrigger} value={perTrigger}>
-                                    {currPer[0].toUpperCase() + currPer.slice(1)}ly
-                                </TabsTrigger>
-                            )
-                        })}
-                    </TabsList>
+                                return (
+                                    <TabsTrigger className="text-xs" key={perTrigger} value={perTrigger}>
+                                        {currPer[0].toUpperCase() + currPer.slice(1)}ly
+                                    </TabsTrigger>
+                                )
+                            })}
+                        </TabsList>
+                        <ScrollBar orientation="horizontal"/>
+                    </ScrollArea>
                     {Pers.map(perContent => {
                         return (
                             <TabsContent key={perContent} value={perContent}>
@@ -249,31 +253,6 @@ export function BudgetBreakdownCard({ grossIncome, useGrossIncome, per, usePer }
                         )
                     })}
                 </Tabs>
-                {/* Mobile View */}
-                <div className="block sm:hidden">
-                    <Select defaultValue={per}>
-                        <SelectTrigger className="w-[180px]">
-                            <SelectValue placeholder="Select a filter" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectGroup>
-                                {Pers.map(perSelect => {
-                                    let currPer;
-                                    if (perSelect === "day")
-                                        currPer = "dai";
-                                    else
-                                        currPer = perSelect;
-
-                                    return (
-                                        <SelectItem key={perSelect} value={perSelect}>
-                                            {currPer[0].toUpperCase() + currPer.slice(1)}ly
-                                        </SelectItem>
-                                    )
-                                })}
-                            </SelectGroup>
-                        </SelectContent>
-                    </Select>
-                </div>
             </CardContent>
         </Card>
     )
