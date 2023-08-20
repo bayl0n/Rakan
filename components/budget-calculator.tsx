@@ -21,10 +21,11 @@ function convertPer(income: number, fromPer: Per, toPer: Per): number {
     // Convert to hour then convert to destination
     const hourConversion= new Map<Per, number>();
 
-    hourConversion.set("year", 2080);
-    hourConversion.set("month", 160);
-    hourConversion.set("week", 40);
-    hourConversion.set("day", 8);
+    // Break down each per by hour
+    hourConversion.set("year", 1976);
+    hourConversion.set("month", 164.67);
+    hourConversion.set("week", 38);
+    hourConversion.set("day", 7.6);
     hourConversion.set("hour", 1);
 
     const fromPerHours = hourConversion.get(fromPer);
