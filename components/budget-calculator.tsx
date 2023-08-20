@@ -1,6 +1,6 @@
 "use client"
 
-import { BanknoteIcon, CalculatorIcon, DollarSignIcon, EggFriedIcon, GemIcon, PiggyBankIcon } from "lucide-react";
+import { BanknoteIcon, CalculatorIcon, DollarSignIcon, EggFriedIcon, GemIcon, PiggyBankIcon, WrenchIcon } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "./ui/card";
 import { Input } from "./ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -10,6 +10,7 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Button } from "./ui/button";
 import { Dispatch, SetStateAction, useState } from "react";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem, SelectLabel, SelectGroup } from "./ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 
 const Pers = ["year", "month", "week", "day", "hour"] as const;
 type Per = typeof Pers[number];
@@ -41,67 +42,73 @@ export function BudgetDashboard({ ...props }) {
 
     return (
         <>
-            <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">
-                        Gross Income
-                    </CardTitle>
-                    <DollarSignIcon
-                        className="h-4 w-4 text-muted-foreground"
-                    />
-                </CardHeader>
-                <CardContent>
-                    <div className="text-2xl font-bold">
-                        ${grossIncome.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} / {per}
-                    </div>
-                </CardContent>
-            </Card>
-            <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">
-                        Expenses
-                    </CardTitle>
-                    <BanknoteIcon
-                        className="h-4 w-4 text-muted-foreground"
-                    />
-                </CardHeader>
-                <CardContent>
-                    <div className="text-2xl font-bold">
-                        ${(grossIncome * 0.5).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                    </div>
-                </CardContent>
-            </Card>
-            <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">
-                        Luxury
-                    </CardTitle>
-                    <GemIcon
-                        className="h-4 w-4 text-muted-foreground"
-                    />
-                </CardHeader>
-                <CardContent>
-                    <div className="text-2xl font-bold">
-                        ${(grossIncome * 0.3).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                    </div>
-                </CardContent>
-            </Card>
-            <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">
-                        Savings
-                    </CardTitle>
-                    <PiggyBankIcon
-                        className="h-4 w-4 text-muted-foreground"
-                    />
-                </CardHeader>
-                <CardContent>
-                    <div className="text-2xl font-bold">
-                        ${(grossIncome * 0.2).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                    </div>
-                </CardContent>
-            </Card>
-            <BudgetCalculatorForm {...childProps} />
+            {/* <h1 className="mt-10 scroll-m-20 pb-1 text-3xl font-semibold tracking-tight transition-colors first:mt-0">
+                Budget
+            </h1> */}
+            <div className="flex flex-col-reverse gap-4 sm:grid md:grid-cols-2 lg:grid-cols-6">
+                <Card className="col-span-3">
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                        <CardTitle className="text-sm font-medium">
+                            Income
+                        </CardTitle>
+                        <DollarSignIcon
+                            className="h-4 w-4 text-muted-foreground"
+                        />
+                    </CardHeader>
+                    <CardContent>
+                        <div className="text-2xl font-bold">
+                            ${grossIncome.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} / {per}
+                        </div>
+                    </CardContent>
+                </Card>
+                <Card>
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                        <CardTitle className="text-sm font-medium">
+                            Fixed Expenses
+                        </CardTitle>
+                        <BanknoteIcon
+                            className="h-4 w-4 text-muted-foreground"
+                        />
+                    </CardHeader>
+                    <CardContent>
+                        <div className="text-2xl font-bold">
+                            ${(grossIncome * 0.5).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                        </div>
+                    </CardContent>
+                </Card>
+                <Card>
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                        <CardTitle className="text-sm font-medium">
+                            Lifestyle Expenses
+                        </CardTitle>
+                        <GemIcon
+                            className="h-4 w-4 text-muted-foreground"
+                        />
+                    </CardHeader>
+                    <CardContent>
+                        <div className="text-2xl font-bold">
+                            ${(grossIncome * 0.3).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                        </div>
+                    </CardContent>
+                </Card>
+                <Card>
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                        <CardTitle className="text-sm font-medium">
+                            Future Savings
+                        </CardTitle>
+                        <PiggyBankIcon
+                            className="h-4 w-4 text-muted-foreground"
+                        />
+                    </CardHeader>
+                    <CardContent>
+                        <div className="text-2xl font-bold">
+                            ${(grossIncome * 0.2).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                        </div>
+                    </CardContent>
+                </Card>
+                <BudgetCalculatorForm {...childProps} />
+                <BudgetBreakdownCard {...childProps} />
+            </div>
         </>
     )
 }
@@ -122,7 +129,7 @@ export function BudgetCalculatorForm({ grossIncome, useGrossIncome, per, usePer 
     }
 
     return (
-        <Card className="col-span-2">
+        <Card className="col-span-3">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-6">
                 <CardTitle className="text-xl font-medium">
                     Budget Calculator
@@ -155,29 +162,29 @@ export function BudgetCalculatorForm({ grossIncome, useGrossIncome, per, usePer 
                             name="per"
                             render={({ field }) => (
                                 <FormItem>
-                                <FormLabel>Per</FormLabel>
-                                <Select onValueChange={field.onChange} defaultValue={per}>
-                                  <FormControl>
-                                    <SelectTrigger>
-                                      <SelectValue placeholder="Select an option..." />
-                                    </SelectTrigger>
-                                  </FormControl>
-                                  <SelectContent>
-                                    <SelectGroup>
-                                        <SelectLabel>Per</SelectLabel>
-                                        { Pers.map(per => {
-                                            return(
-                                                <SelectItem key={per} value={per}>{per}</SelectItem>
-                                            )
-                                        })}
-                                    </SelectGroup>
-                                  </SelectContent>
-                                </Select>
-                                <FormDescription>
-                                    How often you are paid.
-                                </FormDescription>
-                                <FormMessage />
-                              </FormItem>
+                                    <FormLabel>Per</FormLabel>
+                                    <Select onValueChange={field.onChange} defaultValue={per}>
+                                        <FormControl>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Select an option..." />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            <SelectGroup>
+                                                <SelectLabel>Per</SelectLabel>
+                                                {Pers.map(per => {
+                                                    return (
+                                                        <SelectItem key={per} value={per}>{per}</SelectItem>
+                                                    )
+                                                })}
+                                            </SelectGroup>
+                                        </SelectContent>
+                                    </Select>
+                                    <FormDescription>
+                                        How often you are paid.
+                                    </FormDescription>
+                                    <FormMessage />
+                                </FormItem>
                             )}
                         />
                         <Button type="submit">Submit</Button>
@@ -190,16 +197,40 @@ export function BudgetCalculatorForm({ grossIncome, useGrossIncome, per, usePer 
 
 export function BudgetBreakdownCard({ grossIncome, useGrossIncome, per, usePer }: Props) {
     return (
-        <Card className="col-span-2">
+        <Card className="col-span-3">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-6">
                 <CardTitle className="text-2xl font-medium">
                     Breakdown
                 </CardTitle>
-                <EggFriedIcon
+                <WrenchIcon
                     className="h-4 w-4 text-muted-foreground"
                 />
             </CardHeader>
             <CardContent>
+                <Tabs defaultValue={per} className="w-[400px]">
+                    <TabsList>
+                        {Pers.map(perTrigger => {
+                            let currPer;
+                            if (perTrigger === 'day')
+                                currPer = 'dai';
+                            else
+                                currPer = perTrigger;
+
+                            return (
+                                <TabsTrigger key={perTrigger} value={perTrigger}>
+                                    {currPer[0].toUpperCase() + currPer.slice(1)}ly
+                                </TabsTrigger>
+                            )
+                        })}
+                    </TabsList>
+                    {Pers.map(perContent => {
+                        return (
+                            <TabsContent key={perContent} value={perContent}>
+                                Converting {per} to {perContent}
+                            </TabsContent>
+                        )
+                    })}
+                </Tabs>
             </CardContent>
         </Card>
     )

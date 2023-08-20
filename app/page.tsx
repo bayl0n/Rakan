@@ -123,21 +123,19 @@ export default function HomePage() {
     <div className="flex flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
         <NavigationBar />
-        <Tabs defaultValue="personal" className="space-y-4">
+        <Tabs defaultValue="budget" className="space-y-4">
           <TabsList>
-            <TabsTrigger value="personal">
-              Personal
+            <TabsTrigger value="budget">
+              Budget
             </TabsTrigger>
-            <TabsTrigger value="apartment" disabled>
-              Apartment
+            <TabsTrigger value="expenses" disabled>
+              Expenses
             </TabsTrigger>
           </TabsList>
-          <TabsContent value="personal" className="space-y-4">
-            <div className="flex flex-col-reverse gap-4 sm:grid md:grid-cols-2 lg:grid-cols-4">
-              <BudgetDashboard/>
-            </div>
+          <TabsContent value="budget" className="space-y-4">
+            <BudgetDashboard/>
           </TabsContent>
-          <TabsContent value="apartment" className="space-y-4">
+          <TabsContent value="expenses" className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
