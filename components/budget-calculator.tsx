@@ -249,6 +249,7 @@ export function BudgetBreakdownCard({ grossIncome, useGrossIncome, per, usePer }
                         )
                     })}
                 </Tabs>
+                {/* Mobile View */}
                 <div className="block sm:hidden">
                     <Select defaultValue={per}>
                         <SelectTrigger className="w-[180px]">
@@ -256,9 +257,17 @@ export function BudgetBreakdownCard({ grossIncome, useGrossIncome, per, usePer }
                         </SelectTrigger>
                         <SelectContent>
                             <SelectGroup>
-                                {Pers.map(selectPer => {
+                                {Pers.map(perSelect => {
+                                    let currPer;
+                                    if (perSelect === "day")
+                                        currPer = "dai";
+                                    else
+                                        currPer = perSelect;
+
                                     return (
-                                        <SelectItem key={selectPer} value={selectPer}>{selectPer[0].toUpperCase() + selectPer.slice(1)}ly</SelectItem>
+                                        <SelectItem key={perSelect} value={perSelect}>
+                                            {currPer[0].toUpperCase() + currPer.slice(1)}ly
+                                        </SelectItem>
                                     )
                                 })}
                             </SelectGroup>
