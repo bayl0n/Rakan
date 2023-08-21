@@ -13,13 +13,14 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem, SelectLa
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { ScrollArea, ScrollBar } from "./ui/scroll-area";
 import { reduceEachTrailingCommentRange } from "typescript";
+import { Separator } from "./ui/separator";
 
 const Pers = ["year", "month", "week", "day", "hour"] as const;
 type Per = typeof Pers[number];
 
 function convertPer(income: number, fromPer: Per, toPer: Per): number {
     // Convert to hour then convert to destination
-    const hourConversion= new Map<Per, number>();
+    const hourConversion = new Map<Per, number>();
 
     // Break down each per by hour
     hourConversion.set("year", 1976);
@@ -68,67 +69,7 @@ export function BudgetDashboard({ ...props }) {
             {/* <h1 className="mt-10 scroll-m-20 pb-1 text-3xl font-semibold tracking-tight transition-colors first:mt-0">
                 Budget
             </h1> */}
-            <div className="flex flex-col-reverse gap-4 sm:grid md:grid-cols-2 lg:grid-cols-6">
-                <Card className="col-span-3">
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">
-                            Income
-                        </CardTitle>
-                        <DollarSignIcon
-                            className="h-4 w-4 text-muted-foreground"
-                        />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">
-                            ${grossIncome.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} / {per}
-                        </div>
-                    </CardContent>
-                </Card>
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">
-                            Fixed Expenses
-                        </CardTitle>
-                        <BanknoteIcon
-                            className="h-4 w-4 text-muted-foreground"
-                        />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">
-                            ${(grossIncome * 0.5).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                        </div>
-                    </CardContent>
-                </Card>
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">
-                            Lifestyle Expenses
-                        </CardTitle>
-                        <GemIcon
-                            className="h-4 w-4 text-muted-foreground"
-                        />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">
-                            ${(grossIncome * 0.3).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                        </div>
-                    </CardContent>
-                </Card>
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">
-                            Future Savings
-                        </CardTitle>
-                        <PiggyBankIcon
-                            className="h-4 w-4 text-muted-foreground"
-                        />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">
-                            ${(grossIncome * 0.2).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                        </div>
-                    </CardContent>
-                </Card>
+            <div className="flex flex-col gap-4 sm:grid lg:grid-cols-6">
                 <BudgetCalculatorForm {...childProps} />
                 <BudgetBreakdownCard {...childProps} />
             </div>
@@ -152,7 +93,7 @@ export function BudgetCalculatorForm({ grossIncome, useGrossIncome, per, usePer 
     }
 
     return (
-        <Card className="col-span-3">
+        <Card className="col-span-2">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-6">
                 <CardTitle className="text-xl font-medium">
                     Budget Calculator
@@ -219,8 +160,12 @@ export function BudgetCalculatorForm({ grossIncome, useGrossIncome, per, usePer 
 }
 
 export function BudgetBreakdownCard({ grossIncome, useGrossIncome, per, usePer }: Props) {
+    const fixedExpensesMultiplier = 0.5;
+    const lifestyleExpensesMultiplier = 0.3;
+    const futureSavingsMultiplier = 0.2;
+
     return (
-        <Card className="col-span-3">
+        <Card className="col-span-2 lg:col-span-4">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-6">
                 <CardTitle className="text-2xl font-medium">
                     Breakdown
@@ -247,15 +192,62 @@ export function BudgetBreakdownCard({ grossIncome, useGrossIncome, per, usePer }
                                 )
                             })}
                         </TabsList>
-                        <ScrollBar orientation="horizontal"/>
+                        <ScrollBar orientation="horizontal" />
                     </ScrollArea>
                     {Pers.map(perContent => {
                         return (
-                            <TabsContent key={perContent} value={perContent}>
-                                <div className="text-2xl font-bold">
-                                    ${(convertPer(grossIncome, per, perContent)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                </div>
-                            </TabsContent>
+                            <>
+                                <TabsContent key={perContent} value={perContent}>
+                                    <Separator className="mb-4" />
+                                    <header className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                        <div className="text-sm font-medium">
+                                            Income
+                                        </div>
+                                        <DollarSignIcon
+                                            className="h-4 w-4 text-muted-foreground"
+                                        />
+                                    </header>
+                                    <section className="text-2xl font-bold">
+                                        ${(convertPer(grossIncome, per, perContent)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} <span className="text-sm">/ {perContent}</span>
+                                    </section>
+                                    <Separator className="my-4" />
+                                    <header className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                        <div className="text-sm font-medium">
+                                            Fixed Expenses
+                                        </div>
+                                        <BanknoteIcon
+                                            className="h-4 w-4 text-muted-foreground"
+                                        />
+                                    </header>
+                                    <section className="text-2xl font-bold">
+                                        ${(convertPer(grossIncome, per, perContent) * fixedExpensesMultiplier).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                    </section>
+                                    <Separator className="my-4" />
+                                    <header className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                        <div className="text-sm font-medium">
+                                            Lifestyle Expenses
+                                        </div>
+                                        <GemIcon
+                                            className="h-4 w-4 text-muted-foreground"
+                                        />
+                                    </header>
+                                    <section className="text-2xl font-bold">
+                                        ${(convertPer(grossIncome, per, perContent) * lifestyleExpensesMultiplier).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                    </section>
+                                    <Separator className="my-4" />
+                                    <header className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                        <div className="text-sm font-medium">
+                                            Future Savings
+                                        </div>
+                                        <PiggyBankIcon
+                                            className="h-4 w-4 text-muted-foreground"
+                                        />
+                                    </header>
+                                    <section className="text-2xl font-bold">
+                                        ${(convertPer(grossIncome, per, perContent) * futureSavingsMultiplier).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                    </section>
+                                </TabsContent>
+                            </>
                         )
                     })}
                 </Tabs>
