@@ -1,6 +1,6 @@
 "use client"
 
-import { BanknoteIcon, CalculatorIcon, DollarSignIcon, EggFriedIcon, GemIcon, PiggyBankIcon, WrenchIcon } from "lucide-react";
+import { BanknoteIcon, CalculatorIcon, DollarSignIcon, GemIcon, PiggyBankIcon, WrenchIcon } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "./ui/card";
 import { Input } from "./ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,7 +12,6 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem, SelectLabel, SelectGroup } from "./ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { ScrollArea, ScrollBar } from "./ui/scroll-area";
-import { reduceEachTrailingCommentRange } from "typescript";
 import { Separator } from "./ui/separator";
 
 const Pers = ["year", "month", "week", "day", "hour"] as const;
