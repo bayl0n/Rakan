@@ -175,7 +175,7 @@ export function BudgetBreakdownCard({ grossIncome, useGrossIncome, per, usePer }
             </CardHeader>
             <CardContent>
                 <Tabs defaultValue={per}>
-                    <ScrollArea className="pb-4">
+                    <ScrollArea className="mb-4">
                         <TabsList>
                             {Pers.map(perTrigger => {
                                 let currPer;
