@@ -22,6 +22,8 @@ function convertPer(income: number, fromPer: Per, toPer: Per): number {
     const hourConversion = new Map<Per, number>();
 
     // Break down each per by hour
+    // it might be worth to include this in budget breakdown card to allow
+    // these values to be adjusted as states
     hourConversion.set("year", 1976);
     hourConversion.set("month", 164.67);
     hourConversion.set("week", 38);
