@@ -1,31 +1,14 @@
 import { Metadata } from "next"
 
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs"
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow
-} from "@/components/ui/table"
-import { ScrollArea } from "@/components/ui/scroll-area"
 import { NavigationBar } from "@/components/navigation-bar"
-import { DollarSign, Users } from "lucide-react"
 import { BudgetDashboard} from "@/components/budget-calculator"
+import ExpensesDashboard from "@/components/expenses/expenses-dashboard"
 
 export const metadata: Metadata = {
   title: "Rakan",
@@ -50,7 +33,7 @@ export default function HomePage() {
             <BudgetDashboard/>
           </TabsContent>
           <TabsContent value="expenses" className="space-y-4">
-            <div>Insert expenses content here</div>
+            <ExpensesDashboard/>
           </TabsContent>
         </Tabs>
       </div>

@@ -66,15 +66,10 @@ export function BudgetDashboard({ ...props }) {
     };
 
     return (
-        <>
-            {/* <h1 className="mt-10 scroll-m-20 pb-1 text-3xl font-semibold tracking-tight transition-colors first:mt-0">
-                Budget
-            </h1> */}
-            <div className="flex flex-col gap-4 sm:grid lg:grid-cols-6">
-                <BudgetCalculatorForm {...childProps} />
-                <BudgetBreakdownCard {...childProps} />
-            </div>
-        </>
+        <div className="flex flex-col gap-4 sm:grid lg:grid-cols-6">
+            <BudgetCalculatorForm {...childProps} />
+            <BudgetBreakdownCard {...childProps} />
+        </div>
     )
 }
 
