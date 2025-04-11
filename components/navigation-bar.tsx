@@ -2,14 +2,11 @@
 import { ThemeToggle } from "@/components/theme-toggle"
 import {
     NavigationMenu,
-    NavigationMenuContent,
-    NavigationMenuIndicator,
     NavigationMenuItem,
     NavigationMenuLink,
     NavigationMenuList,
     NavigationMenuTrigger,
     navigationMenuTriggerStyle,
-    NavigationMenuViewport,
 } from "@/components/ui/navigation-menu"
 
 import { BirdIcon } from "lucide-react"
