@@ -33,6 +33,7 @@ export default function HomePage() {
             <BudgetDashboard/>
           </TabsContent>
           <TabsContent value="expenses" className="space-y-4">
+            {/* @ts-expect-error Server Component */}
             <ExpensesDashboard/>
           </TabsContent>
         </Tabs>
