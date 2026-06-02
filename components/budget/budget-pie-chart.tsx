@@ -102,7 +102,7 @@ export function BudgetPieChart({
                 stroke="none"
                 fontSize={16}
                 fontWeight={600}
-                formatter={(value) =>
+                formatter={(value: string) =>
                   chartConfig[value as keyof typeof chartConfig]?.label
                 }
               />
