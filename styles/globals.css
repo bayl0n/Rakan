@@ -1,7 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
- 
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -24,8 +24,15 @@
     --input: 240 5.9% 90%;
     --ring: 142.1 76.2% 36.3%;
     --radius: 0.75rem;
+
+    /* Rakan chart palette */
+    --chart-1: 142.1 76.2% 36.3%; /* emerald green */
+    --chart-2: 47.9 95.8% 53.1%; /* golden yellow */
+    --chart-3: 84.8 85.2% 34.5%; /* lime green */
+    --chart-4: 160.1 84.1% 39.4%; /* teal green */
+    --chart-5: 35.5 91.7% 32.9%; /* warm amber brown */
   }
- 
+
   .dark {
     --background: 20 14.3% 4.1%;
     --foreground: 0 0% 95%;
@@ -46,9 +53,16 @@
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
     --ring: 142.4 71.8% 29.2%;
+
+    /* Rakan chart palette - dark mode */
+    --chart-1: 142.1 70.6% 45.3%; /* bright emerald */
+    --chart-2: 47.9 95.8% 53.1%; /* golden yellow */
+    --chart-3: 84.8 85.2% 44.5%; /* brighter lime */
+    --chart-4: 160.1 84.1% 44.4%; /* teal green */
+    --chart-5: 35.5 91.7% 52.9%; /* amber */
   }
 }
- 
+
 @layer base {
   * {
     @apply border-border;

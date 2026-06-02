@@ -1,19 +1,19 @@
-import '../styles/globals.css'
-import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-import { ThemeProvider } from '@/components/theme-provider'
+import "../styles/globals.css";
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import { ThemeProvider } from "@/components/theme-provider";
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'Rakan',
-  description: 'An application by Nathan Baylon',
-}
+  title: "Rakan",
+  description: "An application by Nathan Baylon",
+};
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <html lang="en">
@@ -23,5 +23,5 @@ export default function RootLayout({
         </ThemeProvider>
       </body>
     </html>
-  )
+  );
 }
