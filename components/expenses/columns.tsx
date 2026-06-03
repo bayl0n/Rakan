@@ -1,35 +1,90 @@
 "use client";
 import { ColumnDef } from "@tanstack/react-table";
+import { Trash2Icon } from "lucide-react";
 
-const ExpenseStatuses = ["pending", "processing", "success", "failed"] as const;
-type ExpenseStatus = typeof ExpenseStatuses[number];
+import { Button } from "@/components/ui/button";
+import {
+  formatExpenseFrequency,
+  type BudgetCategoryId,
+  type ExpenseFrequency,
+} from "@/lib/budget";
 
 export type Expense = {
-    id: string,
-    amount: number,
-    status: ExpenseStatus,
-    payer: string
-}
+  id: string;
+  amount: number;
+  amountForPeriod: number;
+  categoryId: BudgetCategoryId;
+  categoryLabel: string;
+  frequency: ExpenseFrequency;
+  payer: string;
+  description: string;
+  date: string;
+};
 
-export const columns: ColumnDef<Expense>[] = [
+export function getExpenseColumns(
+  onDeleteExpense: (expenseId: string) => void,
+): ColumnDef<Expense>[] {
+  return [
     {
-        accessorKey: "status",
-        header: "Status",
-        cell: info => {
-            const value = info.getValue() as ExpenseStatus;
-            return value ? value.charAt(0).toUpperCase() + value.slice(1) : '';
-          },
+      accessorKey: "date",
+      header: "Date",
     },
     {
-        accessorKey: "payer",
-        header: "Payer",
+      accessorKey: "categoryLabel",
+      header: "Category",
     },
     {
-        accessorKey: "amount",
-        header: "Amount",
-        cell: info => {
-            const value = Number(info.getValue());
-            return `$${value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-          }
+      accessorKey: "description",
+      header: "Description",
     },
-]
+    {
+      accessorKey: "payer",
+      header: "Payer",
+    },
+    {
+      accessorKey: "frequency",
+      header: "Frequency",
+      cell: (info) =>
+        formatExpenseFrequency(info.getValue() as ExpenseFrequency),
+    },
+    {
+      accessorKey: "amount",
+      header: "Amount",
+      cell: (info) => {
+        const value = Number(info.getValue());
+        return value.toLocaleString("en-AU", {
+          style: "currency",
+          currency: "AUD",
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        });
+      },
+    },
+    {
+      accessorKey: "amountForPeriod",
+      header: "Tracked",
+      cell: (info) => {
+        const value = Number(info.getValue());
+        return value.toLocaleString("en-AU", {
+          style: "currency",
+          currency: "AUD",
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        });
+      },
+    },
+    {
+      id: "actions",
+      cell: ({ row }) => (
+        <Button
+          aria-label="Delete expense"
+          size="icon"
+          variant="ghost"
+          onClick={() => onDeleteExpense(row.original.id)}
+        >
+          <Trash2Icon className="h-4 w-4" />
+        </Button>
+      ),
+    },
+  ];
+}

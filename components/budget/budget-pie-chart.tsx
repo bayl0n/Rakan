@@ -1,14 +1,6 @@
 "use client";
 
-import { LabelList, Pie, PieChart } from "recharts";
-
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Label, Pie, PieChart } from "recharts";
 
 import {
   ChartContainer,
@@ -16,11 +8,10 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart";
+import type { BudgetCategoryWithAmount } from "@/lib/budget";
 
 type BudgetPieChartProps = {
-  fixedExpenses: number;
-  lifestyleExpenses: number;
-  futureSavings: number;
+  categories: BudgetCategoryWithAmount[];
 };
 
 const chartConfig = {
@@ -41,42 +32,36 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function BudgetPieChart({
-  fixedExpenses,
-  lifestyleExpenses,
-  futureSavings,
-}: BudgetPieChartProps) {
-  const chartData = [
-    {
-      category: "fixedExpenses",
-      amount: fixedExpenses,
-      fill: "var(--color-fixedExpenses)",
-    },
-    {
-      category: "lifestyleExpenses",
-      amount: lifestyleExpenses,
-      fill: "var(--color-lifestyleExpenses)",
-    },
-    {
-      category: "futureSavings",
-      amount: futureSavings,
-      fill: "var(--color-futureSavings)",
-    },
-  ];
+export function BudgetPieChart({ categories }: BudgetPieChartProps) {
+  const total = categories.reduce((sum, category) => sum + category.amount, 0);
+  const chartData = categories.map((category) => ({
+    category: category.id,
+    label: category.shortLabel,
+    amount: category.amount,
+    percent: category.percent,
+    fill: `var(--color-${category.id})`,
+  }));
+  const currencyFormatter = new Intl.NumberFormat("en-AU", {
+    style: "currency",
+    currency: "AUD",
+    maximumFractionDigits: 0,
+  });
 
   return (
-    <Card className="flex flex-col border-none">
-      <CardHeader className="items-center pb-0">
-        <CardTitle>Budget Breakdown</CardTitle>
-        <CardDescription>
+    <section className="flex flex-col">
+      <header className="items-center pb-0 text-center">
+        <h3 className="text-lg font-semibold leading-none tracking-tight">
+          Budget Breakdown
+        </h3>
+        <p className="mt-1 text-sm text-muted-foreground">
           Fixed expenses, lifestyle, and future savings
-        </CardDescription>
-      </CardHeader>
+        </p>
+      </header>
 
-      <CardContent className="flex-1 pb-0">
+      <div className="flex-1 pb-0">
         <ChartContainer
           config={chartConfig}
-          className="mx-auto aspect-square max-h-[500px] [&_.recharts-text]:fill-background"
+          className="mx-auto aspect-square max-h-[300px]"
         >
           <PieChart>
             <ChartTooltip
@@ -84,32 +69,84 @@ export function BudgetPieChart({
                 <ChartTooltipContent
                   nameKey="category"
                   hideLabel
-                  formatter={(value) =>
-                    new Intl.NumberFormat("en-AU", {
-                      style: "currency",
-                      currency: "AUD",
-                      maximumFractionDigits: 0,
-                    }).format(Number(value))
+                  formatter={(value, name, item) =>
+                    `${currencyFormatter.format(Number(value))} (${item.payload.percent}%)`
                   }
                 />
               }
             />
 
-            <Pie data={chartData} dataKey="amount" nameKey="category">
-              <LabelList
-                dataKey="category"
-                className="fill-background"
-                stroke="none"
-                fontSize={16}
-                fontWeight={600}
-                formatter={(value: string) =>
-                  chartConfig[value as keyof typeof chartConfig]?.label
-                }
+            <Pie
+              data={chartData}
+              dataKey="amount"
+              innerRadius="62%"
+              nameKey="category"
+              outerRadius="88%"
+              paddingAngle={3}
+              strokeWidth={4}
+            >
+              <Label
+                content={({ viewBox }) => {
+                  if (!viewBox || !("cx" in viewBox) || !("cy" in viewBox)) {
+                    return null;
+                  }
+
+                  return (
+                    <text
+                      dominantBaseline="middle"
+                      textAnchor="middle"
+                      x={viewBox.cx}
+                      y={viewBox.cy}
+                    >
+                      <tspan
+                        className="fill-muted-foreground"
+                        fontSize={12}
+                        x={viewBox.cx}
+                        y={Number(viewBox.cy) - 10}
+                      >
+                        Total
+                      </tspan>
+                      <tspan
+                        className="fill-foreground"
+                        fontSize={18}
+                        fontWeight={700}
+                        x={viewBox.cx}
+                        y={Number(viewBox.cy) + 14}
+                      >
+                        {currencyFormatter.format(total)}
+                      </tspan>
+                    </text>
+                  );
+                }}
               />
             </Pie>
           </PieChart>
         </ChartContainer>
-      </CardContent>
-    </Card>
+      </div>
+      <div className="grid gap-2">
+        {chartData.map((item) => (
+          <div
+            key={item.category}
+            className="flex items-center justify-between gap-3 rounded-md border px-3 py-2 text-sm"
+          >
+            <div className="flex min-w-0 items-center gap-2">
+              <span
+                className="h-2.5 w-2.5 shrink-0 rounded-full"
+                style={{ backgroundColor: item.fill }}
+              />
+              <span className="truncate font-medium">{item.label}</span>
+            </div>
+            <div className="shrink-0 text-right">
+              <div className="font-medium">
+                {currencyFormatter.format(item.amount)}
+              </div>
+              <div className="text-xs text-muted-foreground">
+                {item.percent}%
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
   );
 }
