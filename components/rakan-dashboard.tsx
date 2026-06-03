@@ -42,7 +42,7 @@ export function RakanDashboard() {
 
   return (
     <div className="flex flex-col">
-      <div className="flex-1 space-y-4 p-8 pt-6">
+      <div className="flex-1 space-y-4 p-4 pt-4 sm:p-6 lg:p-8 lg:pt-6">
         <NavigationBar />
         <Tabs defaultValue="budget" className="space-y-4">
           <TabsList>

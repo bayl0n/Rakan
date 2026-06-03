@@ -1,11 +1,12 @@
 "use client";
 
-import { type FormEvent, useMemo, useState } from "react";
+import { type FormEvent, useCallback, useMemo, useState } from "react";
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
   PlusIcon,
   ReceiptIcon,
+  Trash2Icon,
   WalletCardsIcon,
 } from "lucide-react";
 import { Cell, Pie, PieChart } from "recharts";
@@ -173,14 +174,15 @@ export default function ExpensesDashboard({
     },
   ];
 
+  const deleteExpense = useCallback((expenseId: string) => {
+    setExpenses((currentExpenses) =>
+      currentExpenses.filter((expense) => expense.id !== expenseId),
+    );
+  }, []);
+
   const columns = useMemo(
-    () =>
-      getExpenseColumns((expenseId) => {
-        setExpenses((currentExpenses) =>
-          currentExpenses.filter((expense) => expense.id !== expenseId),
-        );
-      }),
-    [],
+    () => getExpenseColumns(deleteExpense),
+    [deleteExpense],
   );
 
   function updateDraft<Field extends keyof ExpenseDraft>(
@@ -241,102 +243,106 @@ export default function ExpensesDashboard({
   }
 
   return (
-    <div className="grid gap-4 lg:grid-cols-6">
-      <Card className="lg:col-span-2">
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-6">
-          <div>
+    <div className="grid min-w-0 gap-4 lg:grid-cols-6">
+      <Card className="min-w-0 lg:col-span-2">
+        <CardHeader className="flex flex-row items-start justify-between gap-4 space-y-0 p-4 pb-5 sm:p-6">
+          <div className="min-w-0">
             <CardTitle className="text-xl font-medium">Add Expense</CardTitle>
             <CardDescription>
               Tracked against your {formatPer(budgetPeriod).toLowerCase()} budget
             </CardDescription>
           </div>
-          <ReceiptIcon className="h-4 w-4 text-muted-foreground" />
+          <ReceiptIcon className="h-4 w-4 shrink-0 text-muted-foreground" />
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-4 pt-0 sm:p-6 sm:pt-0">
           <form onSubmit={addExpense} className="space-y-4">
-            <div className="grid gap-2">
-              <Label htmlFor="expense-amount">Amount</Label>
-              <Input
-                id="expense-amount"
-                min="0"
-                step="0.01"
-                type="number"
-                value={draft.amount}
-                onChange={(event) => updateDraft("amount", event.target.value)}
-                placeholder="0.00"
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label>Category</Label>
-              <Select
-                value={draft.categoryId}
-                onValueChange={(value) =>
-                  updateDraft("categoryId", value as BudgetCategoryId)
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a category" />
-                </SelectTrigger>
-                <SelectContent>
-                  {budgetBreakdown.map((category) => (
-                    <SelectItem key={category.id} value={category.id}>
-                      {category.label}
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
+              <div className="grid gap-2">
+                <Label htmlFor="expense-amount">Amount</Label>
+                <Input
+                  id="expense-amount"
+                  min="0"
+                  step="0.01"
+                  type="number"
+                  value={draft.amount}
+                  onChange={(event) =>
+                    updateDraft("amount", event.target.value)
+                  }
+                  placeholder="0.00"
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label>Category</Label>
+                <Select
+                  value={draft.categoryId}
+                  onValueChange={(value) =>
+                    updateDraft("categoryId", value as BudgetCategoryId)
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {budgetBreakdown.map((category) => (
+                      <SelectItem key={category.id} value={category.id}>
+                        {category.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="grid gap-2">
+                <Label>Frequency</Label>
+                <Select
+                  value={draft.frequency}
+                  onValueChange={(value) =>
+                    updateDraft("frequency", value as ExpenseFrequency)
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a frequency" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="oneOff">
+                      {formatExpenseFrequency("oneOff")}
                     </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="grid gap-2">
-              <Label>Frequency</Label>
-              <Select
-                value={draft.frequency}
-                onValueChange={(value) =>
-                  updateDraft("frequency", value as ExpenseFrequency)
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a frequency" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="oneOff">
-                    {formatExpenseFrequency("oneOff")}
-                  </SelectItem>
-                  {Pers.map((per) => (
-                    <SelectItem key={per} value={per}>
-                      {formatExpenseFrequency(per)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="expense-description">Description</Label>
-              <Input
-                id="expense-description"
-                value={draft.description}
-                onChange={(event) =>
-                  updateDraft("description", event.target.value)
-                }
-                placeholder="Rent, groceries, transfer..."
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="expense-payer">Payer</Label>
-              <Input
-                id="expense-payer"
-                value={draft.payer}
-                onChange={(event) => updateDraft("payer", event.target.value)}
-                placeholder="Who paid?"
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="expense-date">Date</Label>
-              <Input
-                id="expense-date"
-                type="date"
-                value={draft.date}
-                onChange={(event) => updateDraft("date", event.target.value)}
-              />
+                    {Pers.map((per) => (
+                      <SelectItem key={per} value={per}>
+                        {formatExpenseFrequency(per)}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="expense-date">Date</Label>
+                <Input
+                  id="expense-date"
+                  type="date"
+                  value={draft.date}
+                  onChange={(event) => updateDraft("date", event.target.value)}
+                />
+              </div>
+              <div className="grid gap-2 sm:col-span-2 lg:col-span-1">
+                <Label htmlFor="expense-description">Description</Label>
+                <Input
+                  id="expense-description"
+                  value={draft.description}
+                  onChange={(event) =>
+                    updateDraft("description", event.target.value)
+                  }
+                  placeholder="Rent, groceries, transfer..."
+                />
+              </div>
+              <div className="grid gap-2 sm:col-span-2 lg:col-span-1">
+                <Label htmlFor="expense-payer">Payer</Label>
+                <Input
+                  id="expense-payer"
+                  value={draft.payer}
+                  onChange={(event) => updateDraft("payer", event.target.value)}
+                  placeholder="Who paid?"
+                />
+              </div>
             </div>
             <Button className="w-full gap-2" type="submit">
               <PlusIcon className="h-4 w-4" />
@@ -346,10 +352,10 @@ export default function ExpensesDashboard({
         </CardContent>
       </Card>
 
-      <div className="space-y-4 lg:col-span-4">
-        <Card>
-          <CardHeader className="space-y-4 pb-4">
-            <div>
+      <div className="min-w-0 space-y-4 lg:col-span-4">
+        <Card className="min-w-0">
+          <CardHeader className="space-y-4 p-4 pb-4 sm:p-6 sm:pb-4">
+            <div className="min-w-0">
               <CardTitle className="text-xl font-medium">
                 Expenses Period
               </CardTitle>
@@ -362,8 +368,8 @@ export default function ExpensesDashboard({
               value={budgetPeriod}
               onValueChange={(value) => setBudgetPeriod(value as Per)}
             >
-              <ScrollArea>
-                <TabsList>
+              <ScrollArea className="max-w-full">
+                <TabsList className="w-max">
                   {Pers.map((per) => (
                     <TabsTrigger key={per} value={per}>
                       {formatPer(per)}
@@ -376,9 +382,10 @@ export default function ExpensesDashboard({
             <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
               <div className="space-y-2">
                 <Label>Viewing</Label>
-                <div className="flex items-center gap-2">
+                <div className="grid grid-cols-[40px_minmax(0,1fr)_40px] items-center gap-2 sm:flex">
                   <Button
                     aria-label="View previous period"
+                    className="shrink-0"
                     size="icon"
                     type="button"
                     variant="outline"
@@ -386,11 +393,17 @@ export default function ExpensesDashboard({
                   >
                     <ChevronLeftIcon className="h-4 w-4" />
                   </Button>
-                  <div className="min-w-[180px] rounded-md border bg-muted px-4 py-2 text-center text-sm font-medium">
-                    {formatPeriodWindow(activePeriodAnchorDate, budgetPeriod)}
+                  <div className="min-w-0 overflow-hidden rounded-md border bg-muted px-2 py-2 text-center text-sm font-medium sm:min-w-[180px] sm:px-4">
+                    <span className="block truncate">
+                      {formatPeriodWindow(
+                        activePeriodAnchorDate,
+                        budgetPeriod,
+                      )}
+                    </span>
                   </div>
                   <Button
                     aria-label="View next period"
+                    className="shrink-0"
                     size="icon"
                     type="button"
                     variant="outline"
@@ -400,7 +413,7 @@ export default function ExpensesDashboard({
                   </Button>
                 </div>
               </div>
-              <div className="grid max-w-[180px] gap-2">
+              <div className="grid gap-2 sm:max-w-[180px]">
                 <Label htmlFor="period-anchor-date">Jump to date</Label>
                 <Input
                   id="period-anchor-date"
@@ -413,30 +426,30 @@ export default function ExpensesDashboard({
           </CardHeader>
         </Card>
 
-        <div className="grid gap-4 md:grid-cols-3">
-          <Card>
-            <CardHeader className="pb-2">
+        <div className="grid gap-3 sm:grid-cols-3 lg:gap-4">
+          <Card className="min-w-0">
+            <CardHeader className="p-4 pb-2 sm:p-6 sm:pb-2">
               <CardTitle className="text-sm font-medium">Budget</CardTitle>
             </CardHeader>
-            <CardContent className="text-2xl font-bold">
+            <CardContent className="break-words p-4 pt-0 text-lg font-bold sm:p-6 sm:pt-0 sm:text-2xl">
               {formatCurrency(totalBudget)}
             </CardContent>
           </Card>
-          <Card>
-            <CardHeader className="pb-2">
+          <Card className="min-w-0">
+            <CardHeader className="p-4 pb-2 sm:p-6 sm:pb-2">
               <CardTitle className="text-sm font-medium">Spent</CardTitle>
             </CardHeader>
-            <CardContent className="text-2xl font-bold">
+            <CardContent className="break-words p-4 pt-0 text-lg font-bold sm:p-6 sm:pt-0 sm:text-2xl">
               {formatCurrency(totalSpent)}
             </CardContent>
           </Card>
-          <Card>
-            <CardHeader className="pb-2">
+          <Card className="min-w-0">
+            <CardHeader className="p-4 pb-2 sm:p-6 sm:pb-2">
               <CardTitle className="text-sm font-medium">Left</CardTitle>
             </CardHeader>
             <CardContent
               className={cn(
-                "text-2xl font-bold",
+                "break-words p-4 pt-0 text-lg font-bold sm:p-6 sm:pt-0 sm:text-2xl",
                 totalRemaining < 0 && "text-destructive",
               )}
             >
@@ -445,9 +458,9 @@ export default function ExpensesDashboard({
           </Card>
         </div>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <div>
+        <Card className="min-w-0">
+          <CardHeader className="flex flex-row items-start justify-between gap-4 space-y-0 p-4 pb-2 sm:p-6 sm:pb-2">
+            <div className="min-w-0">
               <CardTitle className="text-xl font-medium">
                 Budget Remaining
               </CardTitle>
@@ -456,12 +469,40 @@ export default function ExpensesDashboard({
                 {formatPer(budgetPeriod).toLowerCase()} period
               </CardDescription>
             </div>
-            <WalletCardsIcon className="h-4 w-4 text-muted-foreground" />
+            <WalletCardsIcon className="h-4 w-4 shrink-0 text-muted-foreground" />
           </CardHeader>
-          <CardContent className="grid gap-6 md:grid-cols-[220px_1fr]">
+          <CardContent className="grid gap-6 p-4 pt-0 sm:p-6 sm:pt-0 xl:grid-cols-[220px_1fr]">
             <ChartContainer
               config={chartConfig}
-              className="mx-auto aspect-square h-[220px]"
+              className="mx-auto flex aspect-square h-[140px] sm:hidden"
+            >
+              <PieChart>
+                <ChartTooltip
+                  content={
+                    <ChartTooltipContent
+                      hideLabel
+                      nameKey="status"
+                      formatter={(value) => formatCurrency(Number(value))}
+                    />
+                  }
+                />
+                <Pie
+                  data={chartData}
+                  dataKey="amount"
+                  innerRadius={34}
+                  nameKey="status"
+                  outerRadius={54}
+                  strokeWidth={2}
+                >
+                  {chartData.map((entry) => (
+                    <Cell key={entry.status} fill={entry.fill} />
+                  ))}
+                </Pie>
+              </PieChart>
+            </ChartContainer>
+            <ChartContainer
+              config={chartConfig}
+              className="mx-auto hidden aspect-square h-[220px] sm:flex"
             >
               <PieChart>
                 <ChartTooltip
@@ -487,14 +528,16 @@ export default function ExpensesDashboard({
                 </Pie>
               </PieChart>
             </ChartContainer>
-            <div className="space-y-4">
+            <div className="min-w-0 space-y-4">
               {categorySummaries.map((category) => (
-                <div key={category.id} className="space-y-2">
-                  <div className="flex items-center justify-between gap-3">
-                    <div className="text-sm font-medium">{category.label}</div>
+                <div key={category.id} className="min-w-0 space-y-2">
+                  <div className="grid gap-1 sm:flex sm:items-center sm:justify-between sm:gap-3">
+                    <div className="min-w-0 truncate text-sm font-medium">
+                      {category.label}
+                    </div>
                     <div
                       className={cn(
-                        "text-right text-sm font-medium",
+                        "break-words text-sm font-medium sm:text-right",
                         category.remaining < 0 && "text-destructive",
                       )}
                     >
@@ -510,9 +553,13 @@ export default function ExpensesDashboard({
                       }}
                     />
                   </div>
-                  <div className="flex justify-between text-xs text-muted-foreground">
-                    <span>{formatCurrency(category.spent)} spent</span>
-                    <span>{formatCurrency(category.amount)} budget</span>
+                  <div className="grid gap-1 text-xs text-muted-foreground sm:flex sm:justify-between">
+                    <span className="break-words">
+                      {formatCurrency(category.spent)} spent
+                    </span>
+                    <span className="break-words sm:text-right">
+                      {formatCurrency(category.amount)} budget
+                    </span>
                   </div>
                 </div>
               ))}
@@ -520,7 +567,88 @@ export default function ExpensesDashboard({
           </CardContent>
         </Card>
 
-        <DataTable columns={columns} data={trackedExpenses} />
+        <div className="md:hidden">
+          <Card className="min-w-0">
+            <CardHeader className="p-4 pb-3 sm:p-6">
+              <CardTitle className="text-xl font-medium">Expenses</CardTitle>
+              <CardDescription>
+                {trackedExpenses.length
+                  ? `${trackedExpenses.length} tracked`
+                  : "No expenses added yet"}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3 p-4 pt-0 sm:p-6 sm:pt-0">
+              {trackedExpenses.length ? (
+                trackedExpenses.map((expense) => (
+                  <div
+                    key={expense.id}
+                    className="min-w-0 space-y-3 rounded-md border p-3 sm:p-4"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <div className="truncate font-medium">
+                          {expense.description}
+                        </div>
+                        <div className="mt-1 truncate text-xs text-muted-foreground">
+                          {expense.categoryLabel} &middot;{" "}
+                          {formatExpenseFrequency(expense.frequency)}
+                        </div>
+                      </div>
+                      <Button
+                        aria-label="Delete expense"
+                        className="shrink-0"
+                        size="icon"
+                        type="button"
+                        variant="ghost"
+                        onClick={() => deleteExpense(expense.id)}
+                      >
+                        <Trash2Icon className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    <div className="grid min-w-0 grid-cols-2 gap-3 text-sm">
+                      <div className="min-w-0">
+                        <div className="text-xs text-muted-foreground">
+                          Amount
+                        </div>
+                        <div className="break-words font-medium">
+                          {formatCurrency(expense.amount)}
+                        </div>
+                      </div>
+                      <div className="min-w-0 text-right">
+                        <div className="text-xs text-muted-foreground">
+                          Tracked
+                        </div>
+                        <div className="break-words font-medium">
+                          {formatCurrency(expense.amountForPeriod)}
+                        </div>
+                      </div>
+                      <div className="min-w-0">
+                        <div className="text-xs text-muted-foreground">
+                          Date
+                        </div>
+                        <div className="break-words">{expense.date}</div>
+                      </div>
+                      <div className="min-w-0 text-right">
+                        <div className="text-xs text-muted-foreground">
+                          Payer
+                        </div>
+                        <div className="truncate">{expense.payer}</div>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="rounded-md border border-dashed p-6 text-center text-sm text-muted-foreground">
+                  Add an expense to start tracking this period.
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="hidden md:block">
+          <DataTable columns={columns} data={trackedExpenses} />
+        </div>
       </div>
     </div>
   );
