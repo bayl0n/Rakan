@@ -5,21 +5,11 @@ import { Trash2Icon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   formatExpenseFrequency,
-  type BudgetCategoryId,
   type ExpenseFrequency,
 } from "@/lib/budget";
+import { formatCurrency } from "@/lib/format";
 
-export type Expense = {
-  id: string;
-  amount: number;
-  amountForPeriod: number;
-  categoryId: BudgetCategoryId;
-  categoryLabel: string;
-  frequency: ExpenseFrequency;
-  payer: string;
-  description: string;
-  date: string;
-};
+import type { Expense } from "./types";
 
 export function getExpenseColumns(
   onDeleteExpense: (expenseId: string) => void,
@@ -52,12 +42,7 @@ export function getExpenseColumns(
       header: "Amount",
       cell: (info) => {
         const value = Number(info.getValue());
-        return value.toLocaleString("en-AU", {
-          style: "currency",
-          currency: "AUD",
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        });
+        return formatCurrency(value);
       },
     },
     {
@@ -65,12 +50,7 @@ export function getExpenseColumns(
       header: "Tracked",
       cell: (info) => {
         const value = Number(info.getValue());
-        return value.toLocaleString("en-AU", {
-          style: "currency",
-          currency: "AUD",
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        });
+        return formatCurrency(value);
       },
     },
     {
