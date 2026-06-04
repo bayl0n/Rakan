@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 
-import { BudgetDashboard } from "@/components/budget-calculator";
+import { BudgetDashboard } from "@/components/budget/budget-dashboard";
+import { PayDashboard } from "@/components/budget/pay-dashboard";
 import ExpensesDashboard from "@/components/expenses/expenses-dashboard";
 import { NavigationBar } from "@/components/navigation-bar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -44,13 +45,14 @@ export function RakanDashboard() {
     <div className="flex flex-col">
       <div className="flex-1 space-y-4 p-4 pt-4 sm:p-6 lg:p-8 lg:pt-6">
         <NavigationBar />
-        <Tabs defaultValue="budget" className="space-y-4">
+        <Tabs defaultValue="pay" className="space-y-4">
           <TabsList>
+            <TabsTrigger value="pay">Pay</TabsTrigger>
             <TabsTrigger value="budget">Budget</TabsTrigger>
             <TabsTrigger value="expenses">Expenses</TabsTrigger>
           </TabsList>
-          <TabsContent value="budget" className="space-y-4">
-            <BudgetDashboard
+          <TabsContent forceMount value="pay" className="space-y-4">
+            <PayDashboard
               grossIncome={grossIncome}
               setGrossIncome={setGrossIncome}
               per={per}
@@ -62,6 +64,12 @@ export function RakanDashboard() {
               hasHelpDebt={hasHelpDebt}
               setHasHelpDebt={setHasHelpDebt}
               paySummary={paySummary}
+            />
+          </TabsContent>
+          <TabsContent forceMount value="budget" className="space-y-4">
+            <BudgetDashboard
+              paySummary={paySummary}
+              per={per}
               budgetSplitPresetId={budgetSplitPresetId}
               setBudgetSplitPresetId={setBudgetSplitPresetId}
               customBudgetSplit={customBudgetSplit}
@@ -69,7 +77,7 @@ export function RakanDashboard() {
               activeBudgetSplit={activeBudgetSplit}
             />
           </TabsContent>
-          <TabsContent value="expenses" className="space-y-4">
+          <TabsContent forceMount value="expenses" className="space-y-4">
             <ExpensesDashboard
               budgetIncome={paySummary.annualNetPay}
               budgetSplit={activeBudgetSplit}

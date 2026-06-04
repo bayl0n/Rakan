@@ -32,19 +32,16 @@ import {
 import { Pers } from "@/lib/budget";
 
 import { AdvancedPaySettings } from "./advanced-pay-settings";
-import { BudgetSplitFields } from "./budget-split-fields";
-import type { BudgetDashboardProps } from "./types";
-import { useBudgetForm } from "./use-budget-form";
+import type { PayDetailsFormProps } from "./types";
+import { usePayForm } from "./use-pay-form";
 
-export function BudgetCalculatorForm(props: BudgetDashboardProps) {
+export function PayDetailsForm(props: PayDetailsFormProps) {
   const {
-    customSplitTotal,
     form,
-    selectedSplitPresetId,
     setShowAdvancedSettings,
     showAdvancedSettings,
-    submitBudgetDetails,
-  } = useBudgetForm(props);
+    submitPayDetails,
+  } = usePayForm(props);
 
   return (
     <Card className="col-span-2">
@@ -60,7 +57,7 @@ export function BudgetCalculatorForm(props: BudgetDashboardProps) {
       <CardContent>
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(submitBudgetDetails)}
+            onSubmit={form.handleSubmit(submitPayDetails)}
             className="space-y-8"
           >
             <FormField
@@ -118,11 +115,6 @@ export function BudgetCalculatorForm(props: BudgetDashboardProps) {
               form={form}
               onShowAdvancedSettingsChange={setShowAdvancedSettings}
               showAdvancedSettings={showAdvancedSettings}
-            />
-            <BudgetSplitFields
-              customSplitTotal={customSplitTotal}
-              form={form}
-              selectedSplitPresetId={selectedSplitPresetId}
             />
             <Button type="submit">Submit</Button>
           </form>

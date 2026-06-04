@@ -16,6 +16,8 @@ export type Expense = {
   date: string;
 };
 
+export type SavedExpense = Omit<Expense, "amountForPeriod">;
+
 export type ExpenseDraft = {
   amount: string;
   categoryId: BudgetCategoryId;

@@ -1,7 +1,11 @@
 "use client";
 
 import type { UseFormReturn } from "react-hook-form";
-import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
+import {
+  ChevronDownIcon,
+  ChevronUpIcon,
+  SettingsIcon,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -13,20 +17,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
-import type { BudgetFormValues } from "./schema";
+import type { PayFormValues } from "./schema";
 
 type AdvancedPaySettingsProps = {
-  form: UseFormReturn<BudgetFormValues>;
+  form: UseFormReturn<PayFormValues>;
   onShowAdvancedSettingsChange: (showAdvancedSettings: boolean) => void;
   showAdvancedSettings: boolean;
 };
@@ -46,7 +41,10 @@ export function AdvancedPaySettings({
           onShowAdvancedSettingsChange(!showAdvancedSettings)
         }
       >
-        Advanced settings
+        <span className="flex items-center gap-2">
+          <SettingsIcon className="h-4 w-4" />
+          Advanced settings
+        </span>
         {showAdvancedSettings ? (
           <ChevronUpIcon className="h-4 w-4" />
         ) : (
@@ -61,23 +59,22 @@ export function AdvancedPaySettings({
             render={({ field }) => (
               <FormItem>
                 <FormLabel>HELP/HECS Debt</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select an option..." />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectLabel>HELP/HECS</SelectLabel>
-                      <SelectItem value="no">No HELP/HECS debt</SelectItem>
-                      <SelectItem value="yes">Has HELP/HECS debt</SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
+                <div className="grid grid-cols-2 gap-2">
+                  <Button
+                    type="button"
+                    variant={!field.value ? "default" : "outline"}
+                    onClick={() => field.onChange(false)}
+                  >
+                    No HELP/HECS debt
+                  </Button>
+                  <Button
+                    type="button"
+                    variant={field.value ? "default" : "outline"}
+                    onClick={() => field.onChange(true)}
+                  >
+                    Has HELP/HECS debt
+                  </Button>
+                </div>
                 <FormDescription>
                   Adds an estimated compulsory repayment.
                 </FormDescription>
@@ -91,23 +88,24 @@ export function AdvancedPaySettings({
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Superannuation</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select an option..." />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectLabel>Super</SelectLabel>
-                      <SelectItem value="onTop">Super on top</SelectItem>
-                      <SelectItem value="included">Super included</SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
+                <div className="grid grid-cols-2 gap-2">
+                  <Button
+                    type="button"
+                    variant={field.value === "onTop" ? "default" : "outline"}
+                    onClick={() => field.onChange("onTop")}
+                  >
+                    Super on top
+                  </Button>
+                  <Button
+                    type="button"
+                    variant={
+                      field.value === "included" ? "default" : "outline"
+                    }
+                    onClick={() => field.onChange("included")}
+                  >
+                    Super included
+                  </Button>
+                </div>
                 <FormDescription>
                   Whether your entered income includes super.
                 </FormDescription>

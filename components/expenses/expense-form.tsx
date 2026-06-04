@@ -23,16 +23,13 @@ import {
 import type {
   BudgetCategoryId,
   BudgetCategoryWithAmount,
-  ExpenseFrequency,
   Per,
 } from "@/lib/budget";
-import {
-  formatExpenseFrequency,
-  formatPer,
-  Pers,
-} from "@/lib/budget";
+import { formatPer } from "@/lib/budget";
 
+import { ExpenseRecurringControls } from "./expense-recurring-controls";
 import type { ExpenseDraft } from "./types";
+import { PayerCombobox } from "./payer-combobox";
 
 type ExpenseFormProps = {
   budgetBreakdown: BudgetCategoryWithAmount[];
@@ -43,6 +40,7 @@ type ExpenseFormProps = {
     field: Field,
     value: ExpenseDraft[Field],
   ) => void;
+  payerOptions: string[];
 };
 
 export function ExpenseForm({
@@ -51,6 +49,7 @@ export function ExpenseForm({
   draft,
   onAddExpense,
   onUpdateDraft,
+  payerOptions,
 }: ExpenseFormProps) {
   return (
     <Card className="min-w-0 lg:col-span-2">
@@ -100,38 +99,25 @@ export function ExpenseForm({
                 </SelectContent>
               </Select>
             </div>
-            <div className="grid gap-2">
-              <Label>Frequency</Label>
-              <Select
-                value={draft.frequency}
-                onValueChange={(value) =>
-                  onUpdateDraft("frequency", value as ExpenseFrequency)
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a frequency" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="oneOff">
-                    {formatExpenseFrequency("oneOff")}
-                  </SelectItem>
-                  {Pers.map((per) => (
-                    <SelectItem key={per} value={per}>
-                      {formatExpenseFrequency(per)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="expense-date">Date</Label>
-              <Input
-                id="expense-date"
-                type="date"
-                value={draft.date}
-                onChange={(event) => onUpdateDraft("date", event.target.value)}
-              />
-            </div>
+            <ExpenseRecurringControls
+              frequency={draft.frequency}
+              onFrequencyChange={(frequency) =>
+                onUpdateDraft("frequency", frequency)
+              }
+            />
+            {draft.frequency === "oneOff" ? (
+              <div className="grid gap-2">
+                <Label htmlFor="expense-date">Date</Label>
+                <Input
+                  id="expense-date"
+                  type="date"
+                  value={draft.date}
+                  onChange={(event) =>
+                    onUpdateDraft("date", event.target.value)
+                  }
+                />
+              </div>
+            ) : null}
             <div className="grid gap-2 sm:col-span-2 lg:col-span-1">
               <Label htmlFor="expense-description">Description</Label>
               <Input
@@ -145,11 +131,12 @@ export function ExpenseForm({
             </div>
             <div className="grid gap-2 sm:col-span-2 lg:col-span-1">
               <Label htmlFor="expense-payer">Payer</Label>
-              <Input
+              <PayerCombobox
                 id="expense-payer"
-                value={draft.payer}
-                onChange={(event) => onUpdateDraft("payer", event.target.value)}
+                onChange={(value) => onUpdateDraft("payer", value)}
+                options={payerOptions}
                 placeholder="Who paid?"
+                value={draft.payer}
               />
             </div>
           </div>

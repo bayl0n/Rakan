@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
@@ -9,34 +8,21 @@ import {
   type BudgetSplit,
 } from "@/lib/budget";
 
-import { budgetFormSchema, type BudgetFormValues } from "./schema";
-import type { BudgetDashboardProps } from "./types";
+import {
+  budgetSplitFormSchema,
+  type BudgetSplitFormValues,
+} from "./schema";
+import type { BudgetSplitFormProps } from "./types";
 
-export function useBudgetForm({
+export function useBudgetSplitForm({
   budgetSplitPresetId,
   customBudgetSplit,
-  grossIncome,
-  hasHelpDebt,
-  per,
   setBudgetSplitPresetId,
   setCustomBudgetSplit,
-  setGrossIncome,
-  setHasHelpDebt,
-  setPer,
-  setSuperMode,
-  setSuperRate,
-  superMode,
-  superRate,
-}: BudgetDashboardProps) {
-  const [showAdvancedSettings, setShowAdvancedSettings] = useState(false);
-  const form = useForm<BudgetFormValues>({
-    resolver: zodResolver(budgetFormSchema),
+}: BudgetSplitFormProps) {
+  const form = useForm<BudgetSplitFormValues>({
+    resolver: zodResolver(budgetSplitFormSchema),
     defaultValues: {
-      grossIncome,
-      per,
-      superMode,
-      superRate,
-      hasHelpDebt: hasHelpDebt ? "yes" : "no",
       budgetSplitPresetId,
       fixedExpenses: customBudgetSplit.fixedExpenses,
       lifestyleExpenses: customBudgetSplit.lifestyleExpenses,
@@ -44,12 +30,8 @@ export function useBudgetForm({
     },
   });
   const selectedSplitPresetId = form.watch("budgetSplitPresetId");
-  const customSplitTotal =
-    Number(form.watch("fixedExpenses")) +
-    Number(form.watch("lifestyleExpenses")) +
-    Number(form.watch("futureSavings"));
 
-  function submitBudgetDetails(values: BudgetFormValues) {
+  function submitBudgetSplit(values: BudgetSplitFormValues) {
     const customSplit: BudgetSplit = {
       fixedExpenses: values.fixedExpenses,
       lifestyleExpenses: values.lifestyleExpenses,
@@ -66,21 +48,13 @@ export function useBudgetForm({
       return;
     }
 
-    setGrossIncome(values.grossIncome);
-    setPer(values.per);
-    setSuperMode(values.superMode);
-    setSuperRate(values.superRate);
-    setHasHelpDebt(values.hasHelpDebt === "yes");
     setBudgetSplitPresetId(values.budgetSplitPresetId);
     setCustomBudgetSplit(customSplit);
   }
 
   return {
-    customSplitTotal,
     form,
     selectedSplitPresetId,
-    setShowAdvancedSettings,
-    showAdvancedSettings,
-    submitBudgetDetails,
+    submitBudgetSplit,
   };
 }

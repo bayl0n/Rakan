@@ -9,6 +9,16 @@ import type {
 } from "@/lib/budget";
 
 export type BudgetDashboardProps = {
+  paySummary: PaySummary;
+  per: Per;
+  budgetSplitPresetId: BudgetSplitPresetId;
+  setBudgetSplitPresetId: Dispatch<SetStateAction<BudgetSplitPresetId>>;
+  customBudgetSplit: BudgetSplit;
+  setCustomBudgetSplit: Dispatch<SetStateAction<BudgetSplit>>;
+  activeBudgetSplit: BudgetSplit;
+};
+
+export type PayDashboardProps = {
   grossIncome: number;
   setGrossIncome: Dispatch<SetStateAction<number>>;
   per: Per;
@@ -20,11 +30,15 @@ export type BudgetDashboardProps = {
   hasHelpDebt: boolean;
   setHasHelpDebt: Dispatch<SetStateAction<boolean>>;
   paySummary: PaySummary;
+};
+
+export type PayDetailsFormProps = Omit<PayDashboardProps, "paySummary">;
+
+export type BudgetSplitFormProps = {
   budgetSplitPresetId: BudgetSplitPresetId;
   setBudgetSplitPresetId: Dispatch<SetStateAction<BudgetSplitPresetId>>;
   customBudgetSplit: BudgetSplit;
   setCustomBudgetSplit: Dispatch<SetStateAction<BudgetSplit>>;
-  activeBudgetSplit: BudgetSplit;
 };
 
 export type PaySummaryRow = {
