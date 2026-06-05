@@ -28,7 +28,7 @@ export function RakanDashboard() {
   const [hasHelpDebt, setHasHelpDebt] = useState<boolean>(false);
   const [taxYear, setTaxYear] = useState<TaxYear>("2025-26");
   const [budgetSplitPresetId, setBudgetSplitPresetId] =
-    useState<BudgetSplitPresetId>("barefoot");
+    useState<BudgetSplitPresetId>("classic");
   const [customBudgetSplit, setCustomBudgetSplit] =
     useState<BudgetSplit>(defaultBudgetSplit);
   const paySummary = calculatePaySummary({

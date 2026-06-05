@@ -20,7 +20,7 @@ export type BudgetCategoryWithAmount = BudgetCategory & {
 export type BudgetSplit = Record<BudgetCategoryId, number>;
 
 export const BudgetSplitPresetIds = [
-  "barefoot",
+  "classic",
   "needsFocused",
   "savingsFocused",
   "custom",
@@ -58,8 +58,8 @@ export const budgetCategories = [
 
 export const budgetSplitPresets = [
   {
-    id: "barefoot",
-    label: "Current / Barefoot-style",
+    id: "classic",
+    label: "Classic",
     description: "50% fixed, 30% lifestyle, 20% savings",
     split: {
       fixedExpenses: 50,

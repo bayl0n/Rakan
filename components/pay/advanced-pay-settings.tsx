@@ -66,10 +66,7 @@ export function AdvancedPaySettings({
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Tax Year</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  value={field.value}
-                >
+                <Select onValueChange={field.onChange} value={field.value}>
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Select a tax year..." />
@@ -138,7 +135,7 @@ export function AdvancedPaySettings({
                     variant={field.value === "onTop" ? "default" : "outline"}
                     onClick={() => field.onChange("onTop")}
                   >
-                    Super on top
+                    Not included
                   </Button>
                   <Button
                     className={optionButtonClassName}
@@ -146,7 +143,7 @@ export function AdvancedPaySettings({
                     variant={field.value === "included" ? "default" : "outline"}
                     onClick={() => field.onChange("included")}
                   >
-                    Super included
+                    Included
                   </Button>
                 </div>
                 <FormDescription>
