@@ -4,7 +4,7 @@ import {
   PiggyBankIcon,
 } from "lucide-react";
 
-import type { BudgetCategoryWithAmount } from "@/lib/budget";
+import type { BudgetCategoryWithAmount } from "@/lib/finance/budget";
 import { formatCurrency } from "@/lib/format";
 
 type BudgetAllocationGridProps = {

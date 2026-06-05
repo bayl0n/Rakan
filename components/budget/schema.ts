@@ -1,20 +1,6 @@
 import * as z from "zod";
 
-import {
-  BudgetSplitPresetIds,
-  Pers,
-  SuperModes,
-} from "@/lib/budget";
-
-export const payFormSchema = z.object({
-  grossIncome: z.coerce.number().min(0, {
-    message: "Gross income must be greater than 0.",
-  }),
-  per: z.enum(Pers),
-  superMode: z.enum(SuperModes),
-  superRate: z.coerce.number().min(0).max(100),
-  hasHelpDebt: z.boolean(),
-});
+import { BudgetSplitPresetIds } from "@/lib/finance/budget";
 
 export const budgetSplitFormSchema = z.object({
   budgetSplitPresetId: z.enum(BudgetSplitPresetIds),
@@ -23,5 +9,4 @@ export const budgetSplitFormSchema = z.object({
   futureSavings: z.coerce.number().min(0).max(100),
 });
 
-export type PayFormValues = z.infer<typeof payFormSchema>;
 export type BudgetSplitFormValues = z.infer<typeof budgetSplitFormSchema>;

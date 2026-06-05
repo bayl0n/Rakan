@@ -10,7 +10,8 @@ import { ExpensePeriodControls } from "./expense-period-controls";
 import { ExpenseSummaryCards } from "./expense-summary-cards";
 import { MobileExpenseList } from "./mobile-expense-list";
 import { useExpensesDashboard } from "./use-expenses-dashboard";
-import type { BudgetSplit, Per } from "@/lib/budget";
+import type { BudgetSplit } from "@/lib/finance/budget";
+import type { Per } from "@/lib/finance/periods";
 
 type ExpensesDashboardProps = {
   budgetIncome: number;

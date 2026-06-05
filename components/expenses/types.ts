@@ -1,8 +1,8 @@
 import type {
   BudgetCategoryId,
   BudgetCategoryWithAmount,
-  ExpenseFrequency,
-} from "@/lib/budget";
+} from "@/lib/finance/budget";
+import type { ExpenseFrequency } from "@/lib/finance/expenses";
 
 export type Expense = {
   id: string;

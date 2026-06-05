@@ -8,13 +8,10 @@ import {
   useState,
 } from "react";
 
-import type { BudgetSplit, Per } from "@/lib/budget";
-import {
-  getBudgetBreakdown,
-  getExpenseAmountForPeriod,
-  movePeriod,
-  Pers,
-} from "@/lib/budget";
+import type { BudgetSplit } from "@/lib/finance/budget";
+import { getBudgetBreakdown } from "@/lib/finance/budget";
+import { getExpenseAmountForPeriod } from "@/lib/finance/expenses";
+import { movePeriod, Pers, type Per } from "@/lib/finance/periods";
 
 import type {
   Expense,

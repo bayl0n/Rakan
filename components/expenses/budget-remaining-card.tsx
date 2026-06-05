@@ -14,7 +14,7 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart";
-import { formatPer, type Per } from "@/lib/budget";
+import { formatPer, type Per } from "@/lib/finance/periods";
 import { formatCurrency } from "@/lib/format";
 import { cn } from "@/lib/utils";
 

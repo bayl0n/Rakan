@@ -3,20 +3,22 @@
 import { useState } from "react";
 
 import { BudgetDashboard } from "@/components/budget/budget-dashboard";
-import { PayDashboard } from "@/components/budget/pay-dashboard";
+import { PayDashboard } from "@/components/pay/pay-dashboard";
 import ExpensesDashboard from "@/components/expenses/expenses-dashboard";
 import { NavigationBar } from "@/components/navigation-bar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   budgetSplitPresets,
-  calculatePaySummary,
   type BudgetSplit,
   type BudgetSplitPresetId,
   defaultBudgetSplit,
-  type Per,
+} from "@/lib/finance/budget";
+import { Pers, type Per } from "@/lib/finance/periods";
+import {
+  calculatePaySummary,
   type SuperMode,
-  Pers,
-} from "@/lib/budget";
+  type TaxYear,
+} from "@/lib/finance/pay";
 
 export function RakanDashboard() {
   const [grossIncome, setGrossIncome] = useState<number>(50000);
@@ -24,6 +26,7 @@ export function RakanDashboard() {
   const [superMode, setSuperMode] = useState<SuperMode>("onTop");
   const [superRate, setSuperRate] = useState<number>(12);
   const [hasHelpDebt, setHasHelpDebt] = useState<boolean>(false);
+  const [taxYear, setTaxYear] = useState<TaxYear>("2025-26");
   const [budgetSplitPresetId, setBudgetSplitPresetId] =
     useState<BudgetSplitPresetId>("barefoot");
   const [customBudgetSplit, setCustomBudgetSplit] =
@@ -34,6 +37,7 @@ export function RakanDashboard() {
     superMode,
     superRate,
     hasHelpDebt,
+    taxYear,
   });
   const presetSplit =
     budgetSplitPresets.find((preset) => preset.id === budgetSplitPresetId)
@@ -63,6 +67,8 @@ export function RakanDashboard() {
               setSuperRate={setSuperRate}
               hasHelpDebt={hasHelpDebt}
               setHasHelpDebt={setHasHelpDebt}
+              taxYear={taxYear}
+              setTaxYear={setTaxYear}
               paySummary={paySummary}
             />
           </TabsContent>

@@ -14,9 +14,11 @@ import {
 import {
   type ExpenseFrequency,
   formatExpenseFrequency,
+} from "@/lib/finance/expenses";
+import {
   type Per,
   Pers,
-} from "@/lib/budget";
+} from "@/lib/finance/periods";
 
 type ExpenseRecurringControlsProps = {
   frequency: ExpenseFrequency;

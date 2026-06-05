@@ -23,9 +23,8 @@ import {
 import type {
   BudgetCategoryId,
   BudgetCategoryWithAmount,
-  Per,
-} from "@/lib/budget";
-import { formatPer } from "@/lib/budget";
+} from "@/lib/finance/budget";
+import { formatPer, type Per } from "@/lib/finance/periods";
 
 import { ExpenseRecurringControls } from "./expense-recurring-controls";
 import type { ExpenseDraft } from "./types";

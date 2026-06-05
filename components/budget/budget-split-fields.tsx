@@ -23,7 +23,7 @@ import {
   type BudgetSplit,
   budgetSplitPresets,
   type BudgetSplitPresetId,
-} from "@/lib/budget";
+} from "@/lib/finance/budget";
 
 import { BudgetSplitSlider } from "./budget-split-slider";
 import type { BudgetSplitFormValues } from "./schema";
@@ -51,13 +51,23 @@ export function BudgetSplitFields({
       : selectedPreset?.split ?? customSplit;
 
   function setSplitFields(split: BudgetSplit) {
-    form.setValue("fixedExpenses", split.fixedExpenses);
-    form.setValue("lifestyleExpenses", split.lifestyleExpenses);
-    form.setValue("futureSavings", split.futureSavings);
+    const options = {
+      shouldDirty: true,
+      shouldTouch: true,
+      shouldValidate: true,
+    };
+
+    form.setValue("fixedExpenses", split.fixedExpenses, options);
+    form.setValue("lifestyleExpenses", split.lifestyleExpenses, options);
+    form.setValue("futureSavings", split.futureSavings, options);
   }
 
   function selectBudgetSplit(value: BudgetSplitPresetId) {
-    form.setValue("budgetSplitPresetId", value);
+    form.setValue("budgetSplitPresetId", value, {
+      shouldDirty: true,
+      shouldTouch: true,
+      shouldValidate: true,
+    });
 
     if (value === "custom") return;
 
@@ -69,8 +79,12 @@ export function BudgetSplitFields({
   }
 
   function updateCustomSplit(split: BudgetSplit) {
-    form.setValue("budgetSplitPresetId", "custom");
     setSplitFields(split);
+    form.setValue("budgetSplitPresetId", "custom", {
+      shouldDirty: true,
+      shouldTouch: true,
+      shouldValidate: true,
+    });
   }
 
   return (

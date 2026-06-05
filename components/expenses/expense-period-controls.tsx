@@ -18,7 +18,7 @@ import {
   formatPer,
   Pers,
   type Per,
-} from "@/lib/budget";
+} from "@/lib/finance/periods";
 
 type ExpensePeriodControlsProps = {
   activePeriodAnchorDate: string;

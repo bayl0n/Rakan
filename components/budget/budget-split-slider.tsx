@@ -7,7 +7,7 @@ import {
   type BudgetCategoryId,
   budgetCategories,
   type BudgetSplit,
-} from "@/lib/budget";
+} from "@/lib/finance/budget";
 
 type BudgetSplitSliderProps = {
   onSplitChange: (split: BudgetSplit) => void;

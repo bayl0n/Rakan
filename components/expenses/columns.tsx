@@ -17,10 +17,12 @@ import {
 import {
   type BudgetCategoryId,
   type BudgetCategoryWithAmount,
+} from "@/lib/finance/budget";
+import {
   type ExpenseFrequency,
   formatExpenseFrequency,
-  Pers,
-} from "@/lib/budget";
+} from "@/lib/finance/expenses";
+import { Pers } from "@/lib/finance/periods";
 import { formatCurrency } from "@/lib/format";
 
 import { ExpenseActionsMenu } from "./expense-actions-menu";

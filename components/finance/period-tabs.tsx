@@ -2,17 +2,17 @@
 
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Pers, type Per } from "@/lib/budget";
+import { Pers, type Per } from "@/lib/finance/periods";
 
-type BudgetPeriodTabsProps = {
+type PeriodTabsProps = {
   onSelectedBudgetPeriodChange: (period: Per) => void;
   selectedBudgetPeriod: Per;
 };
 
-export function BudgetPeriodTabs({
+export function PeriodTabs({
   onSelectedBudgetPeriodChange,
   selectedBudgetPeriod,
-}: BudgetPeriodTabsProps) {
+}: PeriodTabsProps) {
   return (
     <Tabs
       value={selectedBudgetPeriod}

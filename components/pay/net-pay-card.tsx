@@ -1,7 +1,7 @@
 import { DollarSignIcon } from "lucide-react";
 
-import type { Per } from "@/lib/budget";
-import { formatCurrency } from "@/lib/format";
+import { AnimatedCurrency } from "@/components/finance/animated-currency";
+import type { Per } from "@/lib/finance/periods";
 
 type NetPayCardProps = {
   netPayForPeriod: number;
@@ -20,7 +20,7 @@ export function NetPayCard({
             Net Pay
           </div>
           <div className="mt-2 text-3xl font-bold">
-            {formatCurrency(netPayForPeriod)}
+            <AnimatedCurrency amount={netPayForPeriod} />
           </div>
           <div className="mt-1 text-sm text-muted-foreground">
             / {selectedBudgetPeriod}

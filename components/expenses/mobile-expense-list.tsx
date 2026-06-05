@@ -25,8 +25,8 @@ import {
 import type {
   BudgetCategoryId,
   BudgetCategoryWithAmount,
-} from "@/lib/budget";
-import { formatExpenseFrequency } from "@/lib/budget";
+} from "@/lib/finance/budget";
+import { formatExpenseFrequency } from "@/lib/finance/expenses";
 import { formatCurrency } from "@/lib/format";
 
 import { ExpenseActionsMenu } from "./expense-actions-menu";

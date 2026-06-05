@@ -1,11 +1,7 @@
 "use client";
 
 import type { UseFormReturn } from "react-hook-form";
-import {
-  ChevronDownIcon,
-  ChevronUpIcon,
-  SettingsIcon,
-} from "lucide-react";
+import { ChevronDownIcon, ChevronUpIcon, SettingsIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -17,6 +13,16 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { TaxYears } from "@/lib/finance/pay";
 
 import type { PayFormValues } from "./schema";
 
@@ -25,6 +31,9 @@ type AdvancedPaySettingsProps = {
   onShowAdvancedSettingsChange: (showAdvancedSettings: boolean) => void;
   showAdvancedSettings: boolean;
 };
+
+const optionButtonClassName =
+  "h-auto min-h-10 whitespace-normal px-3 py-2 text-center leading-snug";
 
 export function AdvancedPaySettings({
   form,
@@ -37,13 +46,11 @@ export function AdvancedPaySettings({
         className="w-full justify-between"
         type="button"
         variant="ghost"
-        onClick={() =>
-          onShowAdvancedSettingsChange(!showAdvancedSettings)
-        }
+        onClick={() => onShowAdvancedSettingsChange(!showAdvancedSettings)}
       >
         <span className="flex items-center gap-2">
           <SettingsIcon className="h-4 w-4" />
-          Advanced settings
+          More settings
         </span>
         {showAdvancedSettings ? (
           <ChevronUpIcon className="h-4 w-4" />
@@ -55,12 +62,47 @@ export function AdvancedPaySettings({
         <div className="space-y-6">
           <FormField
             control={form.control}
+            name="taxYear"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Tax Year</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  value={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a tax year..." />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Australian income year</SelectLabel>
+                      {TaxYears.map((taxYear) => (
+                        <SelectItem key={taxYear} value={taxYear}>
+                          {taxYear}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+                <FormDescription>
+                  Applies resident tax rates and HELP/HECS thresholds for that
+                  income year.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
             name="hasHelpDebt"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>HELP/HECS Debt</FormLabel>
                 <div className="grid grid-cols-2 gap-2">
                   <Button
+                    className={optionButtonClassName}
                     type="button"
                     variant={!field.value ? "default" : "outline"}
                     onClick={() => field.onChange(false)}
@@ -68,6 +110,7 @@ export function AdvancedPaySettings({
                     No HELP/HECS debt
                   </Button>
                   <Button
+                    className={optionButtonClassName}
                     type="button"
                     variant={field.value ? "default" : "outline"}
                     onClick={() => field.onChange(true)}
@@ -90,6 +133,7 @@ export function AdvancedPaySettings({
                 <FormLabel>Superannuation</FormLabel>
                 <div className="grid grid-cols-2 gap-2">
                   <Button
+                    className={optionButtonClassName}
                     type="button"
                     variant={field.value === "onTop" ? "default" : "outline"}
                     onClick={() => field.onChange("onTop")}
@@ -97,10 +141,9 @@ export function AdvancedPaySettings({
                     Super on top
                   </Button>
                   <Button
+                    className={optionButtonClassName}
                     type="button"
-                    variant={
-                      field.value === "included" ? "default" : "outline"
-                    }
+                    variant={field.value === "included" ? "default" : "outline"}
                     onClick={() => field.onChange("included")}
                   >
                     Super included

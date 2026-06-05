@@ -9,7 +9,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -29,7 +28,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Pers } from "@/lib/budget";
+import { Pers } from "@/lib/finance/periods";
 
 import { AdvancedPaySettings } from "./advanced-pay-settings";
 import type { PayDetailsFormProps } from "./types";
@@ -40,7 +39,6 @@ export function PayDetailsForm(props: PayDetailsFormProps) {
     form,
     setShowAdvancedSettings,
     showAdvancedSettings,
-    submitPayDetails,
   } = usePayForm(props);
 
   return (
@@ -57,8 +55,9 @@ export function PayDetailsForm(props: PayDetailsFormProps) {
       <CardContent>
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(submitPayDetails)}
             className="space-y-8"
+            noValidate
+            onSubmit={(event) => event.preventDefault()}
           >
             <FormField
               control={form.control}
@@ -86,7 +85,7 @@ export function PayDetailsForm(props: PayDetailsFormProps) {
                   <FormLabel>Pay Frequency</FormLabel>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={field.value}
+                    value={field.value}
                   >
                     <FormControl>
                       <SelectTrigger>
@@ -116,7 +115,6 @@ export function PayDetailsForm(props: PayDetailsFormProps) {
               onShowAdvancedSettingsChange={setShowAdvancedSettings}
               showAdvancedSettings={showAdvancedSettings}
             />
-            <Button type="submit">Submit</Button>
           </form>
         </Form>
       </CardContent>

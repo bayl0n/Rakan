@@ -1,12 +1,13 @@
 "use client";
 
+import { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 import {
   getBudgetSplitTotal,
   type BudgetSplit,
-} from "@/lib/budget";
+} from "@/lib/finance/budget";
 
 import {
   budgetSplitFormSchema,
@@ -22,6 +23,7 @@ export function useBudgetSplitForm({
 }: BudgetSplitFormProps) {
   const form = useForm<BudgetSplitFormValues>({
     resolver: zodResolver(budgetSplitFormSchema),
+    mode: "onChange",
     defaultValues: {
       budgetSplitPresetId,
       fixedExpenses: customBudgetSplit.fixedExpenses,
@@ -31,30 +33,38 @@ export function useBudgetSplitForm({
   });
   const selectedSplitPresetId = form.watch("budgetSplitPresetId");
 
-  function submitBudgetSplit(values: BudgetSplitFormValues) {
-    const customSplit: BudgetSplit = {
-      fixedExpenses: values.fixedExpenses,
-      lifestyleExpenses: values.lifestyleExpenses,
-      futureSavings: values.futureSavings,
-    };
+  useEffect(() => {
+    const subscription = form.watch((values) => {
+      const result = budgetSplitFormSchema.safeParse(values);
 
-    if (
-      values.budgetSplitPresetId === "custom" &&
-      getBudgetSplitTotal(customSplit) !== 100
-    ) {
-      form.setError("futureSavings", {
-        message: "Custom split must total 100%.",
-      });
-      return;
-    }
+      if (!result.success) return;
 
-    setBudgetSplitPresetId(values.budgetSplitPresetId);
-    setCustomBudgetSplit(customSplit);
-  }
+      const customSplit: BudgetSplit = {
+        fixedExpenses: result.data.fixedExpenses,
+        lifestyleExpenses: result.data.lifestyleExpenses,
+        futureSavings: result.data.futureSavings,
+      };
+
+      if (
+        result.data.budgetSplitPresetId === "custom" &&
+        getBudgetSplitTotal(customSplit) !== 100
+      ) {
+        form.setError("futureSavings", {
+          message: "Custom split must total 100%.",
+        });
+        return;
+      }
+
+      form.clearErrors("futureSavings");
+      setBudgetSplitPresetId(result.data.budgetSplitPresetId);
+      setCustomBudgetSplit(customSplit);
+    });
+
+    return () => subscription.unsubscribe();
+  }, [form, setBudgetSplitPresetId, setCustomBudgetSplit]);
 
   return {
     form,
     selectedSplitPresetId,
-    submitBudgetSplit,
   };
 }

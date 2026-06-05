@@ -10,10 +10,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { PeriodTabs } from "@/components/finance/period-tabs";
 import { Separator } from "@/components/ui/separator";
-import { convertPer, type PaySummary, type Per } from "@/lib/budget";
+import { convertIncomeForPeriod, type Per } from "@/lib/finance/periods";
+import type { PaySummary } from "@/lib/finance/pay";
 
-import { BudgetPeriodTabs } from "./budget-period-tabs";
 import { GrossIncomeSplitCard } from "./gross-income-split-card";
 import { NetPayCard } from "./net-pay-card";
 import { PaySummaryGrid } from "./pay-summary-grid";
@@ -29,7 +30,7 @@ export function PayBreakdownCard({
   per,
 }: PayBreakdownCardProps) {
   const [selectedBudgetPeriod, setSelectedBudgetPeriod] = useState<Per>(per);
-  const netPayForPeriod = convertPer(
+  const netPayForPeriod = convertIncomeForPeriod(
     paySummary.annualNetPay,
     "year",
     selectedBudgetPeriod,
@@ -69,7 +70,7 @@ export function PayBreakdownCard({
         <WalletCardsIcon className="h-4 w-4 text-muted-foreground" />
       </CardHeader>
       <CardContent>
-        <BudgetPeriodTabs
+        <PeriodTabs
           onSelectedBudgetPeriodChange={setSelectedBudgetPeriod}
           selectedBudgetPeriod={selectedBudgetPeriod}
         />

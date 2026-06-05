@@ -18,6 +18,8 @@ export function PayDashboard(props: PayDashboardProps) {
         setSuperRate={props.setSuperRate}
         hasHelpDebt={props.hasHelpDebt}
         setHasHelpDebt={props.setHasHelpDebt}
+        taxYear={props.taxYear}
+        setTaxYear={props.setTaxYear}
       />
       <PayBreakdownCard paySummary={props.paySummary} per={props.per} />
     </div>

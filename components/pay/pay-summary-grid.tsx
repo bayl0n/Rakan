@@ -1,6 +1,6 @@
 import { DollarSignIcon } from "lucide-react";
 
-import { convertPer, type Per } from "@/lib/budget";
+import { convertIncomeForPeriod, type Per } from "@/lib/finance/periods";
 import { formatCurrency } from "@/lib/format";
 
 import type { PaySummaryRow } from "./types";
@@ -28,7 +28,7 @@ export function PaySummaryGrid({
             </div>
             <div className="mt-1 text-xl font-bold">
               {formatCurrency(
-                convertPer(row.amount, "year", selectedBudgetPeriod),
+                convertIncomeForPeriod(row.amount, "year", selectedBudgetPeriod),
               )}
             </div>
           </div>

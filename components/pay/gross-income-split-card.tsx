@@ -1,5 +1,5 @@
-import type { PaySummary, Per } from "@/lib/budget";
-import { convertPer } from "@/lib/budget";
+import { convertIncomeForPeriod, type Per } from "@/lib/finance/periods";
+import type { PaySummary } from "@/lib/finance/pay";
 import { formatCurrency } from "@/lib/format";
 
 type GrossIncomeSplitCardProps = {
@@ -23,12 +23,12 @@ export function GrossIncomeSplitCard({
   paySummary,
   selectedBudgetPeriod,
 }: GrossIncomeSplitCardProps) {
-  const grossForPeriod = convertPer(
+  const grossForPeriod = convertIncomeForPeriod(
     paySummary.annualTaxableIncome,
     "year",
     selectedBudgetPeriod,
   );
-  const superForPeriod = convertPer(
+  const superForPeriod = convertIncomeForPeriod(
     paySummary.annualSuper,
     "year",
     selectedBudgetPeriod,
@@ -38,7 +38,7 @@ export function GrossIncomeSplitCard({
   const segments: GrossIncomeSplitSegment[] = [
     {
       label: "Net Pay",
-      amount: convertPer(
+      amount: convertIncomeForPeriod(
         paySummary.annualNetPay,
         "year",
         selectedBudgetPeriod,
@@ -47,7 +47,7 @@ export function GrossIncomeSplitCard({
     },
     {
       label: "Estimated Tax",
-      amount: convertPer(
+      amount: convertIncomeForPeriod(
         paySummary.annualIncomeTax,
         "year",
         selectedBudgetPeriod,
@@ -56,7 +56,7 @@ export function GrossIncomeSplitCard({
     },
     {
       label: "Medicare Levy",
-      amount: convertPer(
+      amount: convertIncomeForPeriod(
         paySummary.annualMedicareLevy,
         "year",
         selectedBudgetPeriod,
@@ -65,7 +65,7 @@ export function GrossIncomeSplitCard({
     },
     {
       label: "HELP/HECS Repayment",
-      amount: convertPer(
+      amount: convertIncomeForPeriod(
         paySummary.annualHelpRepayment,
         "year",
         selectedBudgetPeriod,

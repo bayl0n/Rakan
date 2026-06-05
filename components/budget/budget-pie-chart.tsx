@@ -8,7 +8,7 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart";
-import type { BudgetCategoryWithAmount } from "@/lib/budget";
+import type { BudgetCategoryWithAmount } from "@/lib/finance/budget";
 
 type BudgetPieChartProps = {
   categories: BudgetCategoryWithAmount[];

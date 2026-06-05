@@ -10,14 +10,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { PeriodTabs } from "@/components/finance/period-tabs";
 import { Separator } from "@/components/ui/separator";
-import {
-  getBudgetBreakdown,
-  type Per,
-} from "@/lib/budget";
+import { getBudgetBreakdown } from "@/lib/finance/budget";
+import type { Per } from "@/lib/finance/periods";
 
 import { BudgetAllocationGrid } from "./budget-allocation-grid";
-import { BudgetPeriodTabs } from "./budget-period-tabs";
 import type { BudgetDashboardProps } from "./types";
 
 export function BudgetBreakdownCard({
@@ -45,7 +43,7 @@ export function BudgetBreakdownCard({
         <WrenchIcon className="h-4 w-4 text-muted-foreground" />
       </CardHeader>
       <CardContent>
-        <BudgetPeriodTabs
+        <PeriodTabs
           onSelectedBudgetPeriodChange={setSelectedBudgetPeriod}
           selectedBudgetPeriod={selectedBudgetPeriod}
         />

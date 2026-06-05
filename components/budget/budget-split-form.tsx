@@ -9,7 +9,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 
 import { BudgetSplitFields } from "./budget-split-fields";
@@ -20,7 +19,6 @@ export function BudgetSplitForm(props: BudgetSplitFormProps) {
   const {
     form,
     selectedSplitPresetId,
-    submitBudgetSplit,
   } = useBudgetSplitForm(props);
 
   return (
@@ -37,14 +35,14 @@ export function BudgetSplitForm(props: BudgetSplitFormProps) {
       <CardContent>
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(submitBudgetSplit)}
             className="space-y-8"
+            noValidate
+            onSubmit={(event) => event.preventDefault()}
           >
             <BudgetSplitFields
               form={form}
               selectedSplitPresetId={selectedSplitPresetId}
             />
-            <Button type="submit">Submit</Button>
           </form>
         </Form>
       </CardContent>
